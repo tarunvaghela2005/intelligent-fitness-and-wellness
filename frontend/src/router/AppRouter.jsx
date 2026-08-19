@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 
 import MainLayout from "../components/layout/MainLayout";
+import Login from "../pages/Login/Login";
 
 function Page({ title }) {
     return (
@@ -74,7 +75,7 @@ function AppRouter() {
                     {/* Authentication */}
                     <Route
                         path="/login"
-                        element={<Page title="Login" />}
+                        element={<Login />}
                     />
 
                     <Route
