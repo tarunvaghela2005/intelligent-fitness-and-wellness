@@ -1,13 +1,95 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
+
+import MainLayout from "../components/layout/MainLayout";
+
+function Page({ title }) {
+    return (
+        <div className="p-8">
+            <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">
+                {title}
+            </h1>
+
+            <p className="mt-2 text-[var(--color-text-secondary)]">
+                Intelligent Fitness & Wellness
+            </p>
+        </div>
+    );
+}
 
 function AppRouter() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route
-                    path="/"
-                    element={<h1>Intelligent Fitness & Wellness</h1>}
-                />
+
+                {/* Main Application Layout */}
+                <Route element={<MainLayout />}>
+
+                    {/* Home */}
+                    <Route
+                        path="/"
+                        element={<Page title="Home" />}
+                    />
+
+                    {/* Dashboard */}
+                    <Route
+                        path="/dashboard"
+                        element={<Page title="Dashboard" />}
+                    />
+
+                    {/* Health */}
+                    <Route
+                        path="/health"
+                        element={<Page title="Health" />}
+                    />
+
+                    {/* Workout */}
+                    <Route
+                        path="/workout"
+                        element={<Page title="Workout" />}
+                    />
+
+                    {/* Nutrition */}
+                    <Route
+                        path="/nutrition"
+                        element={<Page title="Nutrition" />}
+                    />
+
+                    {/* Progress */}
+                    <Route
+                        path="/progress"
+                        element={<Page title="Progress" />}
+                    />
+
+                    {/* AI Assistant */}
+                    <Route
+                        path="/ai-chat"
+                        element={<Page title="AI Assistant" />}
+                    />
+
+                    {/* Authentication */}
+                    <Route
+                        path="/login"
+                        element={<Page title="Login" />}
+                    />
+
+                    <Route
+                        path="/register"
+                        element={<Page title="Register" />}
+                    />
+
+                    {/* Unknown Routes */}
+                    <Route
+                        path="*"
+                        element={<Navigate to="/" replace />}
+                    />
+
+                </Route>
+
             </Routes>
         </BrowserRouter>
     );
