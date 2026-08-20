@@ -7,6 +7,7 @@ import {
 
 import MainLayout from "../components/layout/MainLayout";
 import Login from "../pages/Login/Login";
+import Register from "../pages/Register/Register";
 
 function Page({ title }) {
     return (
@@ -26,6 +27,17 @@ function AppRouter() {
     return (
         <BrowserRouter>
             <Routes>
+
+                {/* Authentication Pages */}
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
+
+                <Route
+                    path="/register"
+                    element={<Register />}
+                />
 
                 {/* Main Application Layout */}
                 <Route element={<MainLayout />}>
@@ -72,24 +84,13 @@ function AppRouter() {
                         element={<Page title="AI Assistant" />}
                     />
 
-                    {/* Authentication */}
-                    <Route
-                        path="/login"
-                        element={<Login />}
-                    />
-
-                    <Route
-                        path="/register"
-                        element={<Page title="Register" />}
-                    />
-
-                    {/* Unknown Routes */}
-                    <Route
-                        path="*"
-                        element={<Navigate to="/" replace />}
-                    />
-
                 </Route>
+
+                {/* Unknown Routes */}
+                <Route
+                    path="*"
+                    element={<Navigate to="/" replace />}
+                />
 
             </Routes>
         </BrowserRouter>
