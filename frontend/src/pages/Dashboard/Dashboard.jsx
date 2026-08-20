@@ -1,180 +1,298 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import Tooltip from "../../components/ui/Tooltip";
+
+const summaryCards = [
+    {
+        title: "BMI",
+        value: "22.4",
+        subtitle: "Healthy",
+        icon: "⚖️",
+        iconBg: "bg-blue-100",
+        iconText: "text-blue-600",
+        description:
+            "BMI (Body Mass Index) is a measure that compares your weight with your height to indicate whether your weight is in a healthy range.",
+    },
+    {
+        title: "Calories",
+        value: "1,850",
+        subtitle: "kcal consumed today",
+        icon: "🔥",
+        iconBg: "bg-orange-100",
+        iconText: "text-orange-600",
+        description:
+            "Calories are units of energy from the food and drinks you consume. This shows your estimated calorie intake for today.",
+    },
+    {
+        title: "Water Intake",
+        value: "1.5 L",
+        subtitle: "of 2.5 L daily goal",
+        icon: "💧",
+        iconBg: "bg-cyan-100",
+        iconText: "text-cyan-600",
+        description:
+            "Water intake tracks how much water you have consumed today compared with your daily hydration goal.",
+    },
+    {
+        title: "Today's Workout",
+        value: "45 min",
+        subtitle: "Workout completed",
+        icon: "🏋️",
+        iconBg: "bg-purple-100",
+        iconText: "text-purple-600",
+        description:
+            "This shows the amount of time you have spent exercising today and helps you keep track of your daily workout activity.",
+    },
+];
 
 function Dashboard() {
-    const [userName] = useState("Tarun");
-
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
 
             {/* ============================= */}
             {/* Dashboard Header */}
             {/* ============================= */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-                <div>
-                    <p className="text-sm font-medium text-[var(--color-brand)]">
-                        Dashboard
-                    </p>
+            <div>
+                <p className="text-sm font-medium text-[var(--color-brand)]">
+                    Today
+                </p>
 
-                    <h1 className="mt-1 text-2xl font-bold text-[var(--color-text-primary)] sm:text-3xl">
-                        Welcome back, {userName}! 👋
-                    </h1>
+                <h1 className="mt-1 text-3xl font-bold text-[var(--color-text-primary)] sm:text-4xl">
+                    Dashboard
+                </h1>
 
-                    <p className="mt-2 text-sm text-[var(--color-text-secondary)] sm:text-base">
-                        Here's an overview of your fitness and wellness journey.
-                    </p>
-                </div>
-
-                {/* Date */}
-                <div className="rounded-[var(--radius-lg)] border border-[var(--border-color-default)] bg-[var(--color-surface)] px-4 py-3 shadow-[var(--shadow-sm)]">
-                    <p className="text-xs font-medium text-[var(--color-text-secondary)]">
-                        Today
-                    </p>
-
-                    <p className="mt-1 text-sm font-semibold text-[var(--color-text-primary)]">
-                        {new Date().toLocaleDateString("en-IN", {
-                            weekday: "long",
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                        })}
-                    </p>
-                </div>
-
+                <p className="mt-2 text-sm text-[var(--color-text-secondary)] sm:text-base">
+                    Welcome back, Tarun! 👋 Here's an overview of your
+                    fitness and wellness journey.
+                </p>
             </div>
 
 
             {/* ============================= */}
-            {/* Dashboard Main Layout */}
+            {/* Summary Cards */}
             {/* ============================= */}
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
-                {/* Main Welcome Card */}
-                <div className="rounded-[var(--radius-xl)] border border-[var(--border-color-default)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-md)] xl:col-span-2">
+            <section>
+
+                <div className="mb-4">
+                    <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
+                        Today's Overview
+                    </h2>
+
+                    <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                        Keep track of your daily wellness activities.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+
+                    {summaryCards.map((card) => (
+                        <Tooltip
+                            key={card.title}
+                            text={card.description}
+                        >
+                            <div
+                                className="
+                                    h-full
+                                    cursor-help
+                                    rounded-[var(--radius-xl)]
+                                    border
+                                    border-[var(--border-color-default)]
+                                    bg-[var(--color-surface)]
+                                    p-5
+                                    shadow-[var(--shadow-sm)]
+                                    transition-all
+                                    duration-200
+                                    hover:-translate-y-1
+                                    hover:shadow-[var(--shadow-md)]
+                                "
+                            >
+
+                                {/* Card Header */}
+
+                                <div className="flex items-start justify-between">
+
+                                    <div>
+
+                                        <p className="text-sm font-medium text-[var(--color-text-secondary)]">
+                                            {card.title}
+                                        </p>
+
+                                        <p className="mt-2 text-2xl font-bold text-[var(--color-text-primary)]">
+                                            {card.value}
+                                        </p>
+
+                                    </div>
+
+
+                                    {/* Icon */}
+
+                                    <div
+                                        className={`
+                                            flex
+                                            h-12
+                                            w-12
+                                            shrink-0
+                                            items-center
+                                            justify-center
+                                            rounded-[var(--radius-lg)]
+                                            ${card.iconBg}
+                                            ${card.iconText}
+                                            text-xl
+                                        `}
+                                    >
+                                        {card.icon}
+                                    </div>
+
+                                </div>
+
+
+                                {/* Card Footer */}
+
+                                <p className="mt-4 text-xs text-[var(--color-text-muted)]">
+                                    {card.subtitle}
+                                </p>
+
+                            </div>
+                        </Tooltip>
+                    ))}
+
+                </div>
+
+            </section>
+
+
+            {/* ============================= */}
+            {/* Wellness Journey */}
+            {/* ============================= */}
+
+            <section
+                className="
+                    overflow-hidden
+                    rounded-[var(--radius-xl)]
+                    border
+                    border-[var(--border-color-default)]
+                    bg-[var(--color-surface)]
+                    shadow-[var(--shadow-sm)]
+                "
+            >
+
+                <div className="p-6 sm:p-8">
 
                     <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
 
                         <div>
-                            <span className="inline-flex rounded-full bg-[var(--color-brand)]/10 px-3 py-1 text-xs font-semibold text-[var(--color-brand)]">
-                                Your Wellness Journey
-                            </span>
 
-                            <h2 className="mt-4 text-xl font-bold text-[var(--color-text-primary)]">
+                            <p className="text-sm font-semibold text-[var(--color-brand)]">
+                                Your Wellness Journey
+                            </p>
+
+                            <h2 className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
                                 Stay consistent. Stay healthy.
                             </h2>
 
-                            <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--color-text-secondary)]">
-                                Track your health, workouts, nutrition, and daily
-                                wellness activities from one place.
+                            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                                Track your health, workouts, nutrition,
+                                hydration, and daily wellness activities
+                                from one place.
                             </p>
 
-                            <button
-                                type="button"
-                                className="mt-5 rounded-[var(--radius-lg)] bg-[var(--color-brand)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-sm)] transition hover:bg-[var(--color-brand-hover)] active:scale-[0.98]"
-                            >
-                                Get Started
-                            </button>
                         </div>
 
-                        {/* Wellness Icon */}
-                        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-[var(--color-brand)]/10 text-5xl">
-                            💪
-                        </div>
+
+                        {/* View Health Button */}
+
+                        <Tooltip text="Open your health section to view detailed health information.">
+
+                            <Link
+                                to="/health"
+                                className="
+                                    inline-flex
+                                    shrink-0
+                                    items-center
+                                    justify-center
+                                    rounded-[var(--radius-md)]
+                                    bg-[var(--color-brand)]
+                                    px-5
+                                    py-2.5
+                                    text-sm
+                                    font-semibold
+                                    text-white
+                                    transition-all
+                                    hover:bg-[var(--color-brand-hover)]
+                                    hover:-translate-y-0.5
+                                "
+                            >
+                                View Health
+                            </Link>
+
+                        </Tooltip>
 
                     </div>
 
                 </div>
 
+            </section>
 
-                {/* Today's Focus */}
-                <div className="rounded-[var(--radius-xl)] border border-[var(--border-color-default)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-md)]">
 
-                    <div className="flex items-center justify-between">
+            {/* ============================= */}
+            {/* Today's Focus */}
+            {/* ============================= */}
+
+            <section
+                className="
+                    rounded-[var(--radius-xl)]
+                    border
+                    border-[var(--border-color-default)]
+                    bg-[var(--color-surface)]
+                    p-6
+                    shadow-[var(--shadow-sm)]
+                "
+            >
+
+                <div className="flex items-start gap-4">
+
+                    {/* Focus Icon */}
+
+                    <Tooltip text="Your daily wellness focus helps you build healthy and consistent habits.">
+
+                        <div
+                            className="
+                                flex
+                                h-12
+                                w-12
+                                shrink-0
+                                cursor-help
+                                items-center
+                                justify-center
+                                rounded-[var(--radius-lg)]
+                                bg-[var(--color-brand-light)]
+                                text-xl
+                            "
+                        >
+                            🎯
+                        </div>
+
+                    </Tooltip>
+
+
+                    <div>
+
                         <h2 className="text-lg font-bold text-[var(--color-text-primary)]">
                             Today's Focus
                         </h2>
 
-                        <span className="text-xl">
-                            🎯
-                        </span>
-                    </div>
-
-                    <p className="mt-3 text-sm leading-6 text-[var(--color-text-secondary)]">
-                        Build healthy habits by staying active, hydrated,
-                        and consistent with your wellness goals.
-                    </p>
-
-                    <div className="mt-5 rounded-[var(--radius-lg)] bg-[var(--color-background)] p-4">
-                        <p className="text-xs font-medium text-[var(--color-text-secondary)]">
-                            Progress
+                        <p className="mt-1 text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                            Build healthy habits by staying active,
+                            hydrated, and consistent with your wellness
+                            goals.
                         </p>
 
-                        <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200">
-                            <div
-                                className="h-full rounded-full bg-[var(--color-brand)]"
-                                style={{ width: "0%" }}
-                            />
-                        </div>
-
-                        <p className="mt-2 text-xs text-[var(--color-text-secondary)]">
-                            No activities recorded yet
-                        </p>
                     </div>
 
                 </div>
 
-            </div>
-
-
-            {/* ============================= */}
-            {/* Dashboard Sections Placeholder */}
-            {/* ============================= */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-
-                {/* Health Overview */}
-                <div className="rounded-[var(--radius-xl)] border border-[var(--border-color-default)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)]">
-
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-xl">
-                            ❤️
-                        </div>
-
-                        <div>
-                            <h2 className="font-bold text-[var(--color-text-primary)]">
-                                Health Overview
-                            </h2>
-
-                            <p className="text-xs text-[var(--color-text-secondary)]">
-                                Your health metrics will appear here.
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                {/* Fitness Overview */}
-                <div className="rounded-[var(--radius-xl)] border border-[var(--border-color-default)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)]">
-
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-xl">
-                            🏃
-                        </div>
-
-                        <div>
-                            <h2 className="font-bold text-[var(--color-text-primary)]">
-                                Fitness Overview
-                            </h2>
-
-                            <p className="text-xs text-[var(--color-text-secondary)]">
-                                Your fitness statistics will appear here.
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
+            </section>
 
         </div>
     );
