@@ -10,6 +10,7 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 function Page({ title }) {
     return (
@@ -67,7 +68,7 @@ function AppRouter() {
                         {/* Dashboard */}
                         <Route
                             path="/dashboard"
-                            element={<Page title="Dashboard" />}
+                            element={<Dashboard />}
                         />
 
                         {/* Health */}
