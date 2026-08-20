@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import Alert from "../../components/ui/Alert";
 
 function Login() {
+
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -88,19 +91,40 @@ function Login() {
                 setTimeout(resolve, 1500);
             });
 
-            // Mock authentication
+            // Get registered mock user
+            const storedUser = localStorage.getItem("mockUser");
+
+            if (!storedUser) {
+                throw new Error("No registered account found.");
+            }
+
+            const mockUser = JSON.parse(storedUser);
+
+            // Check email and password
             const isValidUser =
-                formData.email.trim().toLowerCase() === "demo@fitness.com" &&
-                formData.password === "Fitness123";
+                formData.email.trim().toLowerCase() ===
+                mockUser.email.trim().toLowerCase() &&
+                formData.password === mockUser.password;
 
             if (!isValidUser) {
                 throw new Error("Invalid email or password.");
             }
 
+            // Save mock authentication state
+            localStorage.setItem("isAuthenticated", "true");
+
             // Mock success
             setSuccess("Login successful! Welcome back.");
 
-            console.log("Mock login successful:", formData);
+            console.log("Mock login successful:", {
+                email: mockUser.email,
+                username: mockUser.username,
+            });
+
+            // Redirect to dashboard
+            setTimeout(() => {
+                navigate("/dashboard");
+            }, 1000);
 
         } catch (loginError) {
             console.error("Mock login failed:", loginError);

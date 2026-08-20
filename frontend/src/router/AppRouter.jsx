@@ -9,6 +9,7 @@ import MainLayout from "../components/layout/MainLayout";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 function Page({ title }) {
     return (
@@ -29,7 +30,10 @@ function AppRouter() {
         <BrowserRouter>
             <Routes>
 
+                {/* ============================= */}
                 {/* Authentication Pages */}
+                {/* ============================= */}
+
                 <Route
                     path="/login"
                     element={<Login />}
@@ -40,60 +44,75 @@ function AppRouter() {
                     element={<Register />}
                 />
 
-                {/* Main Application Layout */}
-                <Route element={<MainLayout />}>
+                <Route
+                    path="/forgot-password"
+                    element={<ForgotPassword />}
+                />
 
-                    {/* Home */}
-                    <Route
-                        path="/"
-                        element={<Page title="Home" />}
-                    />
 
-                    {/* Dashboard */}
-                    <Route
-                        path="/dashboard"
-                        element={<Page title="Dashboard" />}
-                    />
+                {/* ============================= */}
+                {/* Protected Application Routes */}
+                {/* ============================= */}
 
-                    {/* Health */}
-                    <Route
-                        path="/health"
-                        element={<Page title="Health" />}
-                    />
+                <Route element={<ProtectedRoute />}>
 
-                    {/* Workout */}
-                    <Route
-                        path="/workout"
-                        element={<Page title="Workout" />}
-                    />
+                    <Route element={<MainLayout />}>
 
-                    {/* Nutrition */}
-                    <Route
-                        path="/nutrition"
-                        element={<Page title="Nutrition" />}
-                    />
+                        {/* Home */}
+                        <Route
+                            path="/"
+                            element={<Page title="Home" />}
+                        />
 
-                    {/* Progress */}
-                    <Route
-                        path="/progress"
-                        element={<Page title="Progress" />}
-                    />
+                        {/* Dashboard */}
+                        <Route
+                            path="/dashboard"
+                            element={<Page title="Dashboard" />}
+                        />
 
-                    {/* AI Assistant */}
-                    <Route
-                        path="/ai-chat"
-                        element={<Page title="AI Assistant" />}
-                    />
+                        {/* Health */}
+                        <Route
+                            path="/health"
+                            element={<Page title="Health" />}
+                        />
+
+                        {/* Workout */}
+                        <Route
+                            path="/workout"
+                            element={<Page title="Workout" />}
+                        />
+
+                        {/* Nutrition */}
+                        <Route
+                            path="/nutrition"
+                            element={<Page title="Nutrition" />}
+                        />
+
+                        {/* Progress */}
+                        <Route
+                            path="/progress"
+                            element={<Page title="Progress" />}
+                        />
+
+                        {/* AI Assistant */}
+                        <Route
+                            path="/ai-chat"
+                            element={<Page title="AI Assistant" />}
+                        />
+
+                    </Route>
 
                 </Route>
 
+
+                {/* ============================= */}
                 {/* Unknown Routes */}
+                {/* ============================= */}
+
                 <Route
                     path="*"
                     element={<Navigate to="/" replace />}
                 />
-
-                <Route path="/forgot-password" element={<ForgotPassword />} />
 
             </Routes>
         </BrowserRouter>

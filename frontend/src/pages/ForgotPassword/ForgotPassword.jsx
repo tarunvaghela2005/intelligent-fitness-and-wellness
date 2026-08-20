@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function ForgotPassword() {
     // Email
@@ -10,6 +11,9 @@ function ForgotPassword() {
 
     // Success State
     const [isSuccess, setIsSuccess] = useState(false);
+
+    // General Error
+    const [error, setError] = useState("");
 
     // Email Validation
     const validateEmail = () => {
@@ -41,30 +45,69 @@ function ForgotPassword() {
             setEmailError("");
         }
 
+        if (error) {
+            setError("");
+        }
+
         if (isSuccess) {
             setIsSuccess(false);
         }
     };
 
     // Send Reset Link
-    const handleResetPassword = () => {
+    const handleResetPassword = async () => {
         const isEmailValid = validateEmail();
 
         if (!isEmailValid) {
             return;
         }
 
-        // Start loading
         setIsLoading(true);
         setIsSuccess(false);
+        setError("");
 
-        console.log("Reset password email:", email);
+        try {
+            // Simulate API request
+            await new Promise((resolve) => {
+                setTimeout(resolve, 1500);
+            });
 
-        // Mock API response
-        setTimeout(() => {
-            setIsLoading(false);
+            // Get registered mock user
+            const storedUser = localStorage.getItem("mockUser");
+
+            if (storedUser) {
+                const mockUser = JSON.parse(storedUser);
+
+                console.log("Forgot password request:", {
+                    email: email.trim(),
+                });
+
+                console.log(
+                    "Registered email:",
+                    mockUser.email
+                );
+            } else {
+                console.log(
+                    "No mock account found for this browser."
+                );
+            }
+
+            // Show success message
+            // We intentionally don't reveal whether the email exists.
             setIsSuccess(true);
-        }, 2000);
+
+        } catch (resetError) {
+            console.error(
+                "Forgot password failed:",
+                resetError
+            );
+
+            setError(
+                "Unable to process your request. Please try again."
+            );
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -118,6 +161,15 @@ function ForgotPassword() {
                         </div>
                     )}
 
+                    {/* Error Message */}
+                    {error && (
+                        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+                            <p className="text-sm font-medium text-red-600">
+                                {error}
+                            </p>
+                        </div>
+                    )}
+
                     <div className="space-y-5">
 
                         {/* Email */}
@@ -132,12 +184,14 @@ function ForgotPassword() {
 
                             <input
                                 id="email"
+                                name="email"
                                 type="email"
                                 value={email}
                                 onChange={handleEmailChange}
                                 onBlur={validateEmail}
                                 placeholder="Enter your email"
                                 disabled={isLoading}
+                                autoComplete="email"
                                 className={`w-full px-4 py-3 rounded-xl border bg-white text-slate-900 placeholder-slate-400 outline-none transition ${emailError
                                         ? "border-red-500 focus:ring-4 focus:ring-red-100"
                                         : "border-slate-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
@@ -177,12 +231,14 @@ function ForgotPassword() {
 
                         <p className="text-center text-sm text-slate-600">
                             Remember your password?{" "}
-                            <a
-                                href="/login"
+
+                            <Link
+                                to="/login"
                                 className="font-semibold text-blue-600 hover:text-indigo-600 hover:underline"
                             >
                                 Sign In
-                            </a>
+                            </Link>
+
                         </p>
 
                     </div>

@@ -1,8 +1,11 @@
 import { useState } from "react";
 
-
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+
+    const navigate = useNavigate();
+
     // Full Name
     const [fullName, setFullName] = useState("");
     const [fullNameError, setFullNameError] = useState("");
@@ -227,8 +230,13 @@ function Register() {
         const isPasswordValid = validatePassword();
         const isConfirmPasswordValid = validateConfirmPassword();
 
-        if (!isFullNameValid || !isEmailValid || !isUsernameValid
-            || !isPasswordValid || !isConfirmPasswordValid) {
+        if (
+            !isFullNameValid ||
+            !isEmailValid ||
+            !isUsernameValid ||
+            !isPasswordValid ||
+            !isConfirmPasswordValid
+        ) {
             return;
         }
 
@@ -236,17 +244,40 @@ function Register() {
         setIsLoading(true);
         setIsSuccess(false);
 
-        console.log("Full Name:", fullName);
-        console.log("Email:", email);
-        console.log("Username:", username);
-        // console.log("Password:", password);
-        // console.log("Confirm Password:", confirmPassword);
+        // Mock user data
+        const mockUser = {
+            fullName: fullName.trim(),
+            email: email.trim(),
+            username: username.trim(),
+            password: password,
+        };
 
+        // Save mock user
+        localStorage.setItem(
+            "mockUser",
+            JSON.stringify(mockUser)
+        );
+
+        console.log("Mock user created:", {
+            fullName: mockUser.fullName,
+            email: mockUser.email,
+            username: mockUser.username,
+        });
+
+        // Mock registration request
         setTimeout(() => {
             setIsLoading(false);
             setIsSuccess(true);
-        }, 2000);
 
+            console.log("Registration successful");
+            console.log("Redirecting to /login...");
+
+            // Redirect to Login
+            setTimeout(() => {
+                console.log("Navigating now...");
+                navigate("/login");
+            }, 1500);
+        }, 2000);
     };
 
 
