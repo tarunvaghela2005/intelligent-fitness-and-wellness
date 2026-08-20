@@ -8,6 +8,7 @@ import {
 import MainLayout from "../components/layout/MainLayout";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
+import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 
 function Page({ title }) {
     return (
@@ -91,6 +92,8 @@ function AppRouter() {
                     path="*"
                     element={<Navigate to="/" replace />}
                 />
+
+                <Route path="/forgot-password" element={<ForgotPassword />} />
 
             </Routes>
         </BrowserRouter>
