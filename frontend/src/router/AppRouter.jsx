@@ -11,6 +11,7 @@ import Register from "../pages/Register/Register";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import Dashboard from "../pages/Dashboard/Dashboard";
+import Health from "../pages/Health/Health";
 
 function Page({ title }) {
     return (
@@ -74,7 +75,7 @@ function AppRouter() {
                         {/* Health */}
                         <Route
                             path="/health"
-                            element={<Page title="Health" />}
+                            element={<Health />}
                         />
 
                         {/* Workout */}
