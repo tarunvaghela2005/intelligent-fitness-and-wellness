@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { calculateBodyFat as calculateBodyFatUtil } from "../../../utils/health/bodyFatUtils";
 function BodyFatCalculator() {
     // ==========================================
     // BODY FAT STATE
@@ -21,187 +21,25 @@ function BodyFatCalculator() {
     // ASIAN INDIAN METHOD
     // ==========================================
 
-    const calculateBodyFat = () => {
+    const handleCalculateBodyFat = () => {
         setBodyFatError("");
         setBodyFatResult(null);
 
-        const age = Number(bodyFatAge);
-        const heightValue = Number(bodyFatHeight);
-        const weightValue = Number(bodyFatWeight);
-        const waistValue = Number(bodyFatWaist);
-        const tricepsValue = Number(bodyFatTriceps);
-
-        // ==========================================
-        // REQUIRED FIELD VALIDATION
-        // ==========================================
-
-        if (
-            !bodyFatAge ||
-            !bodyFatGender ||
-            !bodyFatHeight ||
-            !bodyFatWeight ||
-            !bodyFatWaist ||
-            !bodyFatTriceps
-        ) {
-            setBodyFatError(
-                "Please complete all Body Fat fields."
-            );
-            return;
-        }
-
-        // ==========================================
-        // NUMERIC VALIDATION
-        // ==========================================
-
-        if (
-            !Number.isFinite(age) ||
-            !Number.isFinite(heightValue) ||
-            !Number.isFinite(weightValue) ||
-            !Number.isFinite(waistValue) ||
-            !Number.isFinite(tricepsValue)
-        ) {
-            setBodyFatError(
-                "Please enter valid numeric values."
-            );
-            return;
-        }
-
-        // ==========================================
-        // AGE VALIDATION
-        // ==========================================
-
-        if (age < 13 || age > 120) {
-            setBodyFatError(
-                "Age must be between 13 and 120 years."
-            );
-            return;
-        }
-
-        // ==========================================
-        // HEIGHT VALIDATION
-        // ==========================================
-
-        if (heightValue < 50 || heightValue > 300) {
-            setBodyFatError(
-                "Height must be between 50 cm and 300 cm."
-            );
-            return;
-        }
-
-        // ==========================================
-        // WEIGHT VALIDATION
-        // ==========================================
-
-        if (weightValue < 10 || weightValue > 500) {
-            setBodyFatError(
-                "Weight must be between 10 kg and 500 kg."
-            );
-            return;
-        }
-
-        // ==========================================
-        // WAIST VALIDATION
-        // ==========================================
-
-        if (waistValue < 40 || waistValue > 250) {
-            setBodyFatError(
-                "Waist circumference must be between 40 cm and 250 cm."
-            );
-            return;
-        }
-
-        // ==========================================
-        // TRICEPS VALIDATION
-        // ==========================================
-
-        if (tricepsValue < 1 || tricepsValue > 100) {
-            setBodyFatError(
-                "Triceps skinfold must be between 1 mm and 100 mm."
-            );
-            return;
-        }
-
-        // ==========================================
-        // ASIAN INDIAN EQUATION
-        // ==========================================
-        //
-        // %BF =
-        // 42.42
-        // + 0.003 × age
-        // + 7.04 × gender
-        // + 0.42 × triceps skinfold
-        // + 0.29 × waist
-        // + 0.22 × weight
-        // - 0.42 × height
-        //
-        // Gender:
-        // Male = 1
-        // Female = 2
-        //
-
-        const genderValue =
-            bodyFatGender === "male" ? 1 : 2;
-
-        let bodyFat =
-            42.42 +
-            0.003 * age +
-            7.04 * genderValue +
-            0.42 * tricepsValue +
-            0.29 * waistValue +
-            0.22 * weightValue -
-            0.42 * heightValue;
-
-        // ==========================================
-        // PRACTICAL RESULT LIMIT
-        // ==========================================
-
-        bodyFat = Math.max(
-            0,
-            Math.min(60, bodyFat)
+        const response = calculateBodyFatUtil(
+            bodyFatAge,
+            bodyFatGender,
+            bodyFatHeight,
+            bodyFatWeight,
+            bodyFatWaist,
+            bodyFatTriceps
         );
 
-        // ==========================================
-        // CATEGORY
-        // ==========================================
-
-        let category = "";
-        let description = "";
-
-        if (bodyFatGender === "male") {
-            if (bodyFat < 25.5) {
-                category = "Below Asian Indian Risk Cutoff";
-
-                description =
-                    "Your estimated body fat is below the body-fat cutoff reported for cardiovascular-risk assessment in the studied Asian Indian population.";
-            } else {
-                category = "Above Asian Indian Risk Cutoff";
-
-                description =
-                    "Your estimated body fat is at or above the body-fat cutoff reported for cardiovascular-risk assessment in the studied Asian Indian population.";
-            }
-        } else {
-            if (bodyFat < 38) {
-                category = "Below Asian Indian Risk Cutoff";
-
-                description =
-                    "Your estimated body fat is below the body-fat cutoff reported for cardiovascular-risk assessment in the studied Asian Indian population.";
-            } else {
-                category = "Above Asian Indian Risk Cutoff";
-
-                description =
-                    "Your estimated body fat is at or above the body-fat cutoff reported for cardiovascular-risk assessment in the studied Asian Indian population.";
-            }
+        if (!response.success) {
+            setBodyFatError(response.error);
+            return;
         }
 
-        // ==========================================
-        // SET RESULT
-        // ==========================================
-
-        setBodyFatResult({
-            percentage: bodyFat.toFixed(1),
-            category,
-            description,
-        });
+        setBodyFatResult(response.data);
     };
 
 
@@ -696,7 +534,7 @@ function BodyFatCalculator() {
 
                         <button
                             type="button"
-                            onClick={calculateBodyFat}
+                            onClick={handleCalculateBodyFat}
                             className="
                                 flex-1
                                 rounded-[var(--radius-md)]

@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { calculateBMI as calculateBMIUtil } from "../../../utils/health/bmiUtils";
 function BMICalculator() {
     // ==========================================
     // BMI STATE
@@ -16,98 +16,18 @@ function BMICalculator() {
     // BMI CALCULATOR
     // ==========================================
 
-    const calculateBMI = () => {
+    const handleCalculateBMI = () => {
         setError("");
         setResult(null);
 
-        const heightValue = Number(height);
-        const weightValue = Number(weight);
+        const response = calculateBMIUtil(height, weight);
 
-        // Required fields
-        if (!height.trim() || !weight.trim()) {
-            setError("Please enter both height and weight.");
+        if (!response.success) {
+            setError(response.error);
             return;
         }
 
-        // Numeric validation
-        if (
-            !Number.isFinite(heightValue) ||
-            !Number.isFinite(weightValue)
-        ) {
-            setError("Please enter valid numeric values.");
-            return;
-        }
-
-        // Height validation
-        if (heightValue <= 0) {
-            setError("Height must be greater than 0 cm.");
-            return;
-        }
-
-        if (heightValue < 50 || heightValue > 300) {
-            setError("Please enter a height between 50 cm and 300 cm.");
-            return;
-        }
-
-        // Weight validation
-        if (weightValue <= 0) {
-            setError("Weight must be greater than 0 kg.");
-            return;
-        }
-
-        if (weightValue < 10 || weightValue > 500) {
-            setError("Please enter a weight between 10 kg and 500 kg.");
-            return;
-        }
-
-        // ==========================================
-        // BMI FORMULA
-        // ==========================================
-
-        const heightInMeters = heightValue / 100;
-
-        const bmi =
-            weightValue /
-            (heightInMeters * heightInMeters);
-
-        // ==========================================
-        // BMI CATEGORY
-        // ==========================================
-
-        let category = "";
-        let description = "";
-
-        if (bmi < 18.5) {
-            category = "Underweight";
-
-            description =
-                "Your BMI is below the standard healthy range. Consider discussing your nutrition and health goals with a qualified professional.";
-        } else if (bmi < 25) {
-            category = "Healthy Weight";
-
-            description =
-                "Your BMI is within the standard healthy range. Continue maintaining balanced nutrition and regular physical activity.";
-        } else if (bmi < 30) {
-            category = "Overweight";
-
-            description =
-                "Your BMI is above the standard healthy range. Consider focusing on balanced nutrition and regular physical activity.";
-        } else {
-            category = "Obesity";
-
-            description =
-                "Your BMI is in the obesity range. Consider discussing your health and wellness goals with a qualified professional.";
-        }
-
-        // ==========================================
-        // STORE RESULT
-        // ==========================================
-
-        setResult({
-            bmi: bmi.toFixed(1),
-            category,
-            description,
-        });
+        setResult(response.data);
     };
 
 
@@ -339,7 +259,7 @@ function BMICalculator() {
 
                         <button
                             type="button"
-                            onClick={calculateBMI}
+                            onClick={handleCalculateBMI}
                             className="
                                 flex-1
                                 rounded-[var(--radius-md)]

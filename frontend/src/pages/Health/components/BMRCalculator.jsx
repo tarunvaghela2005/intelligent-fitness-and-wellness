@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { calculateBMR as calculateBMRUtil } from "../../../utils/health/bmrUtils";
 
 function BMRCalculator() {
     // ==========================================
@@ -19,80 +20,24 @@ function BMRCalculator() {
     // Mifflin-St Jeor Equation
     // ==========================================
 
-    const calculateBMR = () => {
+    const handleCalculateBMR = () => {
         setBmrError("");
         setBmrResult(null);
 
-        const age = Number(bmrAge);
-        const heightValue = Number(bmrHeight);
-        const weightValue = Number(bmrWeight);
+        const response = calculateBMRUtil(
+            bmrAge,
+            bmrGender,
+            bmrHeight,
+            bmrWeight
+        );
 
-        // Required fields
-        if (
-            !bmrAge ||
-            !bmrGender ||
-            !bmrHeight ||
-            !bmrWeight
-        ) {
-            setBmrError("Please complete all BMR fields.");
+        if (!response.success) {
+            setBmrError(response.error);
             return;
         }
 
-        // Numeric validation
-        if (
-            !Number.isFinite(age) ||
-            !Number.isFinite(heightValue) ||
-            !Number.isFinite(weightValue)
-        ) {
-            setBmrError("Please enter valid numeric values.");
-            return;
-        }
-
-        // Age validation
-        if (age < 13 || age > 120) {
-            setBmrError("Age must be between 13 and 120 years.");
-            return;
-        }
-
-        // Height validation
-        if (heightValue < 50 || heightValue > 300) {
-            setBmrError(
-                "Height must be between 50 cm and 300 cm."
-            );
-            return;
-        }
-
-        // Weight validation
-        if (weightValue < 10 || weightValue > 500) {
-            setBmrError(
-                "Weight must be between 10 kg and 500 kg."
-            );
-            return;
-        }
-
-        // ==========================================
-        // MIFFLIN-ST JEOR EQUATION
-        // ==========================================
-
-        let bmr;
-
-        if (bmrGender === "male") {
-            bmr =
-                10 * weightValue +
-                6.25 * heightValue -
-                5 * age +
-                5;
-        } else {
-            bmr =
-                10 * weightValue +
-                6.25 * heightValue -
-                5 * age -
-                161;
-        }
-
-        setBmrResult(Math.round(bmr));
+        setBmrResult(response.data);
     };
-
 
     // ==========================================
     // RESET
@@ -448,7 +393,7 @@ function BMRCalculator() {
 
                         <button
                             type="button"
-                            onClick={calculateBMR}
+                            onClick={handleCalculateBMR}
                             className="
                                 flex-1
                                 rounded-[var(--radius-md)]
@@ -564,7 +509,7 @@ function BMRCalculator() {
                                     text-[var(--color-text-primary)]
                                 "
                             >
-                                {bmrResult}
+                                {bmrResult.bmr}
                             </p>
 
                             <p

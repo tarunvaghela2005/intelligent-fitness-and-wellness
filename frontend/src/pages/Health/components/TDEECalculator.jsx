@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import { calculateTDEE as calculateTDEEUtil } from "../../../utils/health/tdeeUtils";
 
 function TDEECalculator() {
     // ==========================================
@@ -17,69 +17,22 @@ function TDEECalculator() {
     // TDEE CALCULATOR
     // ==========================================
 
-    const calculateTDEE = () => {
+    const handleCalculateTDEE = () => {
         setTdeeError("");
         setTdeeResult(null);
 
-        const bmrValue = Number(tdeeBmr);
+        const response = calculateTDEEUtil(
+            tdeeBmr,
+            tdeeActivity
+        );
 
-        // ==========================================
-        // REQUIRED FIELD VALIDATION
-        // ==========================================
-
-        if (!tdeeBmr || !tdeeActivity) {
-            setTdeeError(
-                "Please enter your BMR and select your activity level."
-            );
+        if (!response.success) {
+            setTdeeError(response.error);
             return;
         }
 
-        // ==========================================
-        // NUMERIC VALIDATION
-        // ==========================================
-
-        if (!Number.isFinite(bmrValue)) {
-            setTdeeError(
-                "Please enter a valid BMR value."
-            );
-            return;
-        }
-
-        // ==========================================
-        // BMR RANGE VALIDATION
-        // ==========================================
-
-        if (bmrValue < 500 || bmrValue > 5000) {
-            setTdeeError(
-                "BMR must be between 500 and 5000 kcal/day."
-            );
-            return;
-        }
-
-        // ==========================================
-        // ACTIVITY MULTIPLIERS
-        // ==========================================
-
-        const activityMultipliers = {
-            sedentary: 1.2,
-            lightly_active: 1.375,
-            moderately_active: 1.55,
-            very_active: 1.725,
-            extra_active: 1.9,
-        };
-
-        const multiplier =
-            activityMultipliers[tdeeActivity];
-
-        // ==========================================
-        // CALCULATE TDEE
-        // ==========================================
-
-        const tdee = bmrValue * multiplier;
-
-        setTdeeResult(Math.round(tdee));
+        setTdeeResult(response.data);
     };
-
 
     // ==========================================
     // RESET
@@ -322,7 +275,7 @@ function TDEECalculator() {
 
                         <button
                             type="button"
-                            onClick={calculateTDEE}
+                            onClick={handleCalculateTDEE}
                             className="
                                 flex-1
                                 rounded-[var(--radius-md)]
@@ -437,7 +390,7 @@ function TDEECalculator() {
                                     text-[var(--color-text-primary)]
                                 "
                             >
-                                {tdeeResult}
+                                {tdeeResult.tdee}
                             </p>
 
                             <p
