@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { calculateTDEE as calculateTDEEUtil } from "../../../utils/health/tdeeUtils";
+import { calculateTDEE as calculateTDEEUtil } from "../../utils/health/tdeeUtils";
 
 function TDEECalculator() {
     // ==========================================
@@ -456,4 +456,3 @@ function TDEECalculator() {
 }
 
 export default TDEECalculator;
-

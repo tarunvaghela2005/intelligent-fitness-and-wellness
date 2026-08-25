@@ -1,45 +1,55 @@
 import { useState } from "react";
-import { calculateBMI as calculateBMIUtil } from "../../../utils/health/bmiUtils";
-function BMICalculator() {
+import { calculateBMR as calculateBMRUtil } from "../../utils/health/bmrUtils";
+
+function BMRCalculator() {
     // ==========================================
-    // BMI STATE
-    // ==========================================
-
-    const [height, setHeight] = useState("");
-    const [weight, setWeight] = useState("");
-
-    const [result, setResult] = useState(null);
-    const [error, setError] = useState("");
-
-
-    // ==========================================
-    // BMI CALCULATOR
+    // BMR STATE
     // ==========================================
 
-    const handleCalculateBMI = () => {
-        setError("");
-        setResult(null);
+    const [bmrAge, setBmrAge] = useState("");
+    const [bmrGender, setBmrGender] = useState("");
+    const [bmrHeight, setBmrHeight] = useState("");
+    const [bmrWeight, setBmrWeight] = useState("");
 
-        const response = calculateBMIUtil(height, weight);
+    const [bmrResult, setBmrResult] = useState(null);
+    const [bmrError, setBmrError] = useState("");
+
+
+    // ==========================================
+    // BMR CALCULATOR
+    // Mifflin-St Jeor Equation
+    // ==========================================
+
+    const handleCalculateBMR = () => {
+        setBmrError("");
+        setBmrResult(null);
+
+        const response = calculateBMRUtil(
+            bmrAge,
+            bmrGender,
+            bmrHeight,
+            bmrWeight
+        );
 
         if (!response.success) {
-            setError(response.error);
+            setBmrError(response.error);
             return;
         }
 
-        setResult(response.data);
+        setBmrResult(response.data);
     };
-
 
     // ==========================================
     // RESET
     // ==========================================
 
-    const handleReset = () => {
-        setHeight("");
-        setWeight("");
-        setResult(null);
-        setError("");
+    const resetBMR = () => {
+        setBmrAge("");
+        setBmrGender("");
+        setBmrHeight("");
+        setBmrWeight("");
+        setBmrResult(null);
+        setBmrError("");
     };
 
 
@@ -67,16 +77,16 @@ function BMICalculator() {
             <div className="mb-6">
 
                 <p className="text-sm font-medium text-[var(--color-brand)]">
-                    Health Measurement
+                    Metabolism Calculator
                 </p>
 
                 <h2 className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
-                    BMI Calculator
+                    BMR Calculator
                 </h2>
 
-                <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
-                    Calculate your Body Mass Index using your height
-                    and weight.
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                    Calculate your Basal Metabolic Rate to estimate
+                    how many calories your body needs while at rest.
                 </p>
 
             </div>
@@ -89,17 +99,141 @@ function BMICalculator() {
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
 
                 {/* ========================================== */}
-                {/* BMI FORM */}
+                {/* BMR FORM */}
                 {/* ========================================== */}
 
                 <div className="space-y-5">
+
+                    {/* Age */}
+
+                    <div>
+
+                        <label
+                            htmlFor="bmrAge"
+                            className="
+                                mb-2
+                                block
+                                text-sm
+                                font-semibold
+                                text-[var(--color-text-primary)]
+                            "
+                        >
+                            Age
+                        </label>
+
+                        <div className="relative">
+
+                            <input
+                                id="bmrAge"
+                                type="number"
+                                min="13"
+                                max="120"
+                                value={bmrAge}
+                                onChange={(event) => {
+                                    setBmrAge(event.target.value);
+                                    setBmrError("");
+                                }}
+                                placeholder="Enter your age"
+                                className="
+                                    w-full
+                                    rounded-[var(--radius-md)]
+                                    border
+                                    border-[var(--border-color-default)]
+                                    bg-[var(--color-surface)]
+                                    px-4
+                                    py-3
+                                    pr-14
+                                    text-[var(--color-text-primary)]
+                                    outline-none
+                                    transition
+                                    focus:border-[var(--border-color-focus)]
+                                    focus:ring-2
+                                    focus:ring-[var(--border-color-focus)]
+                                "
+                            />
+
+                            <span
+                                className="
+                                    absolute
+                                    right-4
+                                    top-1/2
+                                    -translate-y-1/2
+                                    text-sm
+                                    text-[var(--color-text-muted)]
+                                "
+                            >
+                                yrs
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    {/* Gender */}
+
+                    <div>
+
+                        <label
+                            htmlFor="bmrGender"
+                            className="
+                                mb-2
+                                block
+                                text-sm
+                                font-semibold
+                                text-[var(--color-text-primary)]
+                            "
+                        >
+                            Gender
+                        </label>
+
+                        <select
+                            id="bmrGender"
+                            value={bmrGender}
+                            onChange={(event) => {
+                                setBmrGender(event.target.value);
+                                setBmrError("");
+                            }}
+                            className="
+                                w-full
+                                rounded-[var(--radius-md)]
+                                border
+                                border-[var(--border-color-default)]
+                                bg-[var(--color-surface)]
+                                px-4
+                                py-3
+                                text-[var(--color-text-primary)]
+                                outline-none
+                                transition
+                                focus:border-[var(--border-color-focus)]
+                                focus:ring-2
+                                focus:ring-[var(--border-color-focus)]
+                            "
+                        >
+
+                            <option value="">
+                                Select gender
+                            </option>
+
+                            <option value="male">
+                                Male
+                            </option>
+
+                            <option value="female">
+                                Female
+                            </option>
+
+                        </select>
+
+                    </div>
+
 
                     {/* Height */}
 
                     <div>
 
                         <label
-                            htmlFor="height"
+                            htmlFor="bmrHeight"
                             className="
                                 mb-2
                                 block
@@ -114,15 +248,15 @@ function BMICalculator() {
                         <div className="relative">
 
                             <input
-                                id="height"
+                                id="bmrHeight"
                                 type="number"
                                 min="50"
                                 max="300"
                                 step="0.1"
-                                value={height}
+                                value={bmrHeight}
                                 onChange={(event) => {
-                                    setHeight(event.target.value);
-                                    setError("");
+                                    setBmrHeight(event.target.value);
+                                    setBmrError("");
                                 }}
                                 placeholder="Enter your height"
                                 className="
@@ -166,7 +300,7 @@ function BMICalculator() {
                     <div>
 
                         <label
-                            htmlFor="weight"
+                            htmlFor="bmrWeight"
                             className="
                                 mb-2
                                 block
@@ -181,15 +315,15 @@ function BMICalculator() {
                         <div className="relative">
 
                             <input
-                                id="weight"
+                                id="bmrWeight"
                                 type="number"
                                 min="10"
                                 max="500"
                                 step="0.1"
-                                value={weight}
+                                value={bmrWeight}
                                 onChange={(event) => {
-                                    setWeight(event.target.value);
-                                    setError("");
+                                    setBmrWeight(event.target.value);
+                                    setBmrError("");
                                 }}
                                 placeholder="Enter your weight"
                                 className="
@@ -232,7 +366,7 @@ function BMICalculator() {
                     {/* ERROR */}
                     {/* ========================================== */}
 
-                    {error && (
+                    {bmrError && (
                         <div
                             className="
                                 rounded-[var(--radius-md)]
@@ -246,7 +380,7 @@ function BMICalculator() {
                                 text-red-700
                             "
                         >
-                            {error}
+                            {bmrError}
                         </div>
                     )}
 
@@ -259,7 +393,7 @@ function BMICalculator() {
 
                         <button
                             type="button"
-                            onClick={handleCalculateBMI}
+                            onClick={handleCalculateBMR}
                             className="
                                 flex-1
                                 rounded-[var(--radius-md)]
@@ -274,12 +408,12 @@ function BMICalculator() {
                                 hover:-translate-y-0.5
                             "
                         >
-                            Calculate BMI
+                            Calculate BMR
                         </button>
 
                         <button
                             type="button"
-                            onClick={handleReset}
+                            onClick={resetBMR}
                             className="
                                 rounded-[var(--radius-md)]
                                 border
@@ -302,7 +436,7 @@ function BMICalculator() {
 
 
                 {/* ========================================== */}
-                {/* BMI RESULT */}
+                {/* BMR RESULT */}
                 {/* ========================================== */}
 
                 <div
@@ -313,15 +447,16 @@ function BMICalculator() {
                         rounded-[var(--radius-lg)]
                         bg-[var(--color-slate-50)]
                         p-6
+                        sm:p-8
                     "
                 >
 
-                    {!result ? (
+                    {!bmrResult ? (
 
                         <div className="text-center">
 
                             <div className="text-5xl">
-                                ⚖️
+                                🔥
                             </div>
 
                             <h3
@@ -332,87 +467,74 @@ function BMICalculator() {
                                     text-[var(--color-text-primary)]
                                 "
                             >
-                                No BMI result yet
+                                No BMR result yet
                             </h3>
 
                             <p
                                 className="
                                     mt-2
                                     text-sm
+                                    leading-relaxed
                                     text-[var(--color-text-secondary)]
                                 "
                             >
-                                Enter your height and weight to
-                                calculate your BMI.
+                                Enter your details and calculate your
+                                BMR to estimate your resting calorie
+                                needs.
                             </p>
 
                         </div>
 
                     ) : (
 
-                        <div className="space-y-5">
+                        <div className="text-center">
 
-                            {/* BMI VALUE */}
+                            {/* BMR VALUE */}
+
+                            <p
+                                className="
+                                    text-sm
+                                    font-semibold
+                                    text-[var(--color-brand)]
+                                "
+                            >
+                                Estimated BMR
+                            </p>
+
+                            <p
+                                className="
+                                    mt-3
+                                    text-5xl
+                                    font-bold
+                                    text-[var(--color-text-primary)]
+                                "
+                            >
+                                {bmrResult.bmr}
+                            </p>
+
+                            <p
+                                className="
+                                    mt-2
+                                    text-sm
+                                    font-medium
+                                    text-[var(--color-text-secondary)]
+                                "
+                            >
+                                kcal / day
+                            </p>
+
+
+                            {/* INFORMATION */}
 
                             <div
                                 className="
+                                    mt-6
                                     rounded-[var(--radius-lg)]
                                     bg-[var(--color-brand-light)]
-                                    p-6
-                                    text-center
+                                    p-5
+                                    text-left
                                 "
                             >
-
-                                <p
-                                    className="
-                                        text-sm
-                                        font-semibold
-                                        text-[var(--color-brand)]
-                                    "
-                                >
-                                    Your BMI
-                                </p>
-
-                                <p
-                                    className="
-                                        mt-2
-                                        text-5xl
-                                        font-bold
-                                        text-[var(--color-text-primary)]
-                                    "
-                                >
-                                    {result.bmi}
-                                </p>
-
-                            </div>
-
-
-                            {/* CATEGORY */}
-
-                            <div
-                                className={`
-                                    rounded-[var(--radius-lg)]
-                                    px-5
-                                    py-4
-                                    text-center
-                                    font-semibold
-                                    ${result.category === "Underweight"
-                                        ? "bg-blue-100 text-blue-700"
-                                        : result.category === "Healthy Weight"
-                                            ? "bg-green-100 text-green-700"
-                                            : result.category === "Overweight"
-                                                ? "bg-yellow-100 text-yellow-700"
-                                                : "bg-red-100 text-red-700"
-                                    }
-                                `}
-                            >
-                                {result.category}
-                            </div>
-
-
-                            {/* DESCRIPTION */}
-
-                            <div>
 
                                 <h3
                                     className="
@@ -421,7 +543,7 @@ function BMICalculator() {
                                         text-[var(--color-text-primary)]
                                     "
                                 >
-                                    What does this mean?
+                                    What does BMR mean?
                                 </h3>
 
                                 <p
@@ -432,7 +554,12 @@ function BMICalculator() {
                                         text-[var(--color-text-secondary)]
                                     "
                                 >
-                                    {result.description}
+                                    BMR is the estimated number of
+                                    calories your body needs each day
+                                    to perform essential functions such
+                                    as breathing, circulation, and
+                                    maintaining body temperature while
+                                    at rest.
                                 </p>
 
                             </div>
@@ -449,5 +576,4 @@ function BMICalculator() {
     );
 }
 
-export default BMICalculator;
-
+export default BMRCalculator;

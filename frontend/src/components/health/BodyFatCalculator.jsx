@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { calculateBodyFat as calculateBodyFatUtil } from "../../../utils/health/bodyFatUtils";
+import { calculateBodyFat as calculateBodyFatUtil } from "../../utils/health/bodyFatUtils";
 function BodyFatCalculator() {
     // ==========================================
     // BODY FAT STATE

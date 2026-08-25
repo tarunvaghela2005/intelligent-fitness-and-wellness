@@ -1,7 +1,8 @@
-import BMICalculator from "./components/BMICalculator";
-import BMRCalculator from "./components/BMRCalculator";
-import BodyFatCalculator from "./components/BodyFatCalculator";
-import TDEECalculator from "./components/TDEECalculator";
+import BMICalculator from "../../components/health/BMICalculator";
+import BMRCalculator from "../../components/health/BMRCalculator";
+import BodyFatCalculator from "../../components/health/BodyFatCalculator";
+import TDEECalculator from "../../components/health/TDEECalculator";
+
 function Health() {
     return (
         <div className="space-y-8">
@@ -28,12 +29,11 @@ function Health() {
             {/* BMR Calculator */}
             <BMRCalculator />
 
-            {/**Body Fat Calculator */}
+            {/* Body Fat Calculator */}
             <BodyFatCalculator />
 
-            {/* TDEE Calculator*/}
+            {/* TDEE Calculator */}
             <TDEECalculator />
-
 
         </div>
     );
