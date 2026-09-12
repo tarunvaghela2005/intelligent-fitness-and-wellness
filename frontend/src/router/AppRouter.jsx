@@ -1,9 +1,4 @@
-import {
-    BrowserRouter,
-    Routes,
-    Route,
-    Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, } from "react-router-dom";
 
 import MainLayout from "../components/layout/MainLayout";
 import Login from "../pages/Login/Login";
@@ -12,6 +7,7 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Health from "../pages/Health/Health";
+import Workout from "../pages/Workout/Workout";
 
 function Page({ title }) {
     return (
@@ -81,7 +77,7 @@ function AppRouter() {
                         {/* Workout */}
                         <Route
                             path="/workout"
-                            element={<Page title="Workout" />}
+                            element={<Workout />}
                         />
 
                         {/* Nutrition */}

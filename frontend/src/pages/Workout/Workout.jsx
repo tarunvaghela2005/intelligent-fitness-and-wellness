@@ -1,11 +1,16 @@
 import WorkoutCard from "../../components/workout/WorkoutCard";
 import WorkoutQuickAction from "../../components/workout/WorkoutQuickAction";
 import WorkoutHistoryCard from "../../components/workout/WorkoutHistoryCard";
+import WorkoutForm from "../../components/workout/WorkoutForm";
 
 function Workout() {
     return (
         <div className="space-y-6">
-            {/* Page Header */}
+
+            {/* ========================================== */}
+            {/* PAGE HEADER */}
+            {/* ========================================== */}
+
             <div>
                 <h1 className="text-2xl font-bold text-gray-900">
                     Workout
@@ -16,14 +21,34 @@ function Workout() {
                 </p>
             </div>
 
-            {/* Today's Workout */}
+
+            {/* ========================================== */}
+            {/* TODAY'S WORKOUT */}
+            {/* ========================================== */}
+
             <WorkoutCard />
 
-            {/* Quick Actions */}
+
+            {/* ========================================== */}
+            {/* QUICK ACTIONS */}
+            {/* ========================================== */}
+
             <WorkoutQuickAction />
 
-            {/* Workout History */}
+
+            {/* ========================================== */}
+            {/* CREATE WORKOUT */}
+            {/* ========================================== */}
+
+            <WorkoutForm />
+
+
+            {/* ========================================== */}
+            {/* WORKOUT HISTORY */}
+            {/* ========================================== */}
+
             <WorkoutHistoryCard />
+
         </div>
     );
 }
