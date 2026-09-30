@@ -1,0 +1,466 @@
+{
+  "info": {
+    "name": "Intelligent Fitness & Wellness Microservices Platform",
+    "description": "Comprehensive Postman API Collection for MCA Final Year Project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alex.fitness@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Alex\",\n  \"lastName\": \"Morgan\",\n  \"age\": 24,\n  \"gender\": \"male\",\n  \"heightCm\": 178.0,\n  \"weightKg\": 72.5,\n  \"targetWeightKg\": 75.0,\n  \"activityLevel\": \"moderate\",\n  \"fitnessGoal\": \"muscle_gain\",\n  \"dietaryPreference\": \"high_protein\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.environment.set(\"token\", jsonData.data.token);",
+                  "    pm.environment.set(\"userId\", jsonData.data.userId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alex.fitness@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "me"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. User & Profile",
+      "item": [
+        {
+          "name": "Get User Profile By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"weightKg\": 73.0,\n  \"heightCm\": 178.0,\n  \"activityLevel\": \"active\",\n  \"fitnessGoal\": \"muscle_gain\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Fitness & Workouts",
+      "item": [
+        {
+          "name": "Get Exercises Catalog",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fitness/exercises",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fitness", "exercises"]
+            }
+          }
+        },
+        {
+          "name": "Create Exercise",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Pull-Ups\",\n  \"category\": \"Strength\",\n  \"difficulty\": \"Intermediate\",\n  \"duration\": 15,\n  \"caloriesBurned\": 110,\n  \"equipment\": \"Pull-up Bar\",\n  \"description\": \"Vertical pull targeting latissimus dorsi and biceps.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/fitness/exercises",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fitness", "exercises"]
+            }
+          }
+        },
+        {
+          "name": "Log Workout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{userId}},\n  \"exerciseId\": 1,\n  \"exerciseName\": \"Running\",\n  \"date\": \"2026-09-19\",\n  \"duration\": 30,\n  \"sets\": 1,\n  \"repetitions\": 1,\n  \"caloriesBurned\": 300,\n  \"notes\": \"Morning treadmill interval session\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/fitness/workouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fitness", "workouts"]
+            }
+          }
+        },
+        {
+          "name": "Get Workouts for User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fitness/workouts/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fitness", "workouts", "user", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Fitness Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{userId}},\n  \"goalType\": \"Muscle Gain\",\n  \"targetWeight\": 75.0,\n  \"targetCalories\": 2600,\n  \"targetDate\": \"2026-12-31\",\n  \"status\": \"IN_PROGRESS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/fitness/goals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fitness", "goals"]
+            }
+          }
+        },
+        {
+          "name": "Get Fitness Goals for User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fitness/goals/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fitness", "goals", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Log Progress",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{userId}},\n  \"weight\": 73.0,\n  \"bodyFat\": 14.5,\n  \"workoutCount\": 12,\n  \"caloriesBurned\": 3400,\n  \"recordedDate\": \"2026-09-19\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/fitness/progress",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fitness", "progress"]
+            }
+          }
+        },
+        {
+          "name": "Get Progress for User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/fitness/progress/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fitness", "progress", "{{userId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Nutrition & Hydration",
+      "item": [
+        {
+          "name": "Get Foods Catalog",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/nutrition/foods",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "nutrition", "foods"]
+            }
+          }
+        },
+        {
+          "name": "Add Meal Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{userId}},\n  \"foodId\": 1,\n  \"foodName\": \"White Rice\",\n  \"mealType\": \"Lunch\",\n  \"quantity\": 2.0,\n  \"totalCalories\": 260.0,\n  \"protein\": 5.4,\n  \"carbohydrates\": 56.0,\n  \"fat\": 0.6,\n  \"date\": \"2026-09-19\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/nutrition/meals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "nutrition", "meals"]
+            }
+          }
+        },
+        {
+          "name": "Get User Meals",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/nutrition/meals/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "nutrition", "meals", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Log Water Intake",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{userId}},\n  \"amount\": 500,\n  \"date\": \"2026-09-19\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/nutrition/water",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "nutrition", "water"]
+            }
+          }
+        },
+        {
+          "name": "Get User Water History",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/nutrition/water/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "nutrition", "water", "{{userId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. AI Recommendation Engine",
+      "item": [
+        {
+          "name": "Get Comprehensive AI Recommendation",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/recommendation/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ai", "recommendation", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get BMI Category & Breakdown",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/bmi/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ai", "bmi", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Caloric Expenditure (BMR & TDEE)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ai/calories/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ai", "calories", "{{userId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Notifications & Reminders",
+      "item": [
+        {
+          "name": "Get User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{userId}},\n  \"title\": \"Hydration Reminder\",\n  \"message\": \"Time to drink a glass of water to meet your 2.5L daily target!\",\n  \"type\": \"WATER_REMINDER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications"]
+            }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/1/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "1", "read"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+C:\spring\intelligent-fitness-and-wellness\backend\api-gateway\src\main\java\com\fitness\gateway\filter\JwtAuthenticationFilter.java
+C:\spring\intelligent-fitness-and-wellness\backend\api-gateway\src\main\java\com\fitness\gateway\config\GatewayConfig.java
+C:\spring\intelligent-fitness-and-wellness\backend\api-gateway\src\main\java\com\fitness\gateway\ApiGatewayApplication.java
+C:\spring\intelligent-fitness-and-wellness\backend\api-gateway\src\main\java\com\fitness\gateway\config\CorsConfig.java
+C:\spring\intelligent-fitness-and-wellness\backend\api-gateway\src\main\java\com\fitness\gateway\filter\AuthenticationFilter.java
+C:\spring\intelligent-fitness-and-wellness\backend\api-gateway\src\main\java\com\fitness\gateway\filter\RouteValidator.java

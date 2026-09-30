@@ -1,6 +1,6 @@
 import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
+import { register } from "../../services/authService";
 
 function Register() {
 
@@ -26,11 +26,10 @@ function Register() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
-    // Loading State
+    // Loading & Error States
     const [isLoading, setIsLoading] = useState(false);
-
-    // Success State
     const [isSuccess, setIsSuccess] = useState(false);
+    const [serverError, setServerError] = useState("");
 
     // Full Name Validation
     const validateFullName = () => {
@@ -223,7 +222,7 @@ function Register() {
     };
 
     // Create Account Button
-    const handleRegister = () => {
+    const handleRegister = async () => {
         const isFullNameValid = validateFullName();
         const isEmailValid = validateEmail();
         const isUsernameValid = validateUsername();
@@ -243,44 +242,31 @@ function Register() {
         // Start loading
         setIsLoading(true);
         setIsSuccess(false);
+        setServerError("");
 
-        // Mock user data
-        const mockUser = {
-            fullName: fullName.trim(),
-            email: email.trim(),
-            username: username.trim(),
-            password: password,
-        };
+        try {
+            const result = await register({
+                fullName,
+                email,
+                username,
+                password,
+            });
 
-        // Save mock user
-        localStorage.setItem(
-            "mockUser",
-            JSON.stringify(mockUser)
-        );
-
-        console.log("Mock user created:", {
-            fullName: mockUser.fullName,
-            email: mockUser.email,
-            username: mockUser.username,
-        });
-
-        // Mock registration request
-        setTimeout(() => {
+            if (result.success) {
+                setIsSuccess(true);
+                setTimeout(() => {
+                    navigate("/dashboard");
+                }, 1200);
+            } else {
+                setServerError(result.message || "Registration failed. Please try again.");
+            }
+        } catch (err) {
+            console.error("Registration error:", err);
+            setServerError("Unable to connect to registration server. Please try again.");
+        } finally {
             setIsLoading(false);
-            setIsSuccess(true);
-
-            console.log("Registration successful");
-            console.log("Redirecting to /login...");
-
-            // Redirect to Login
-            setTimeout(() => {
-                console.log("Navigating now...");
-                navigate("/login");
-            }, 1500);
-        }, 2000);
+        }
     };
-
-
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex items-center justify-center px-4 py-10">
@@ -312,7 +298,13 @@ function Register() {
                 {/* Register Card */}
                 <div className="bg-white rounded-3xl shadow-2xl shadow-black/30 p-6 sm:p-8">
 
-                    <form className="space-y-5">
+                    <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); handleRegister(); }}>
+
+                        {serverError && (
+                            <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+                                {serverError}
+                            </div>
+                        )}
 
                         {isSuccess && (
                             <div className="mb-5 rounded-xl border border-green-200 bg-green-50 px-4 py-4 text-center">
@@ -325,7 +317,7 @@ function Register() {
                                 </h2>
 
                                 <p className="mt-1 text-sm text-green-600">
-                                    Welcome to Intelligent Fitness & Wellness.
+                                    Welcome to Intelligent Fitness & Wellness. Redirecting...
                                 </p>
                             </div>
                         )}

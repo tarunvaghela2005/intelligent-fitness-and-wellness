@@ -1,0 +1,14 @@
+com\fitness\ai\EnableFeignClients.class
+com\fitness\ai\dto\UserDto.class
+com\fitness\ai\service\GeminiAiService.class
+com\fitness\ai\AiServiceApplication.class
+com\fitness\ai\client\FeignClient.class
+com\fitness\ai\client\UserClient.class
+com\fitness\ai\client\FitnessClient.class
+com\fitness\ai\controller\AiRecommendationController.class
+com\fitness\ai\dto\NutritionSummaryDto.class
+com\fitness\ai\controller\AiController$AiRequest.class
+com\fitness\ai\service\RecommendationEngineService.class
+com\fitness\ai\client\NutritionClient.class
+com\fitness\ai\controller\AiController.class
+com\fitness\ai\dto\WorkoutDto.class

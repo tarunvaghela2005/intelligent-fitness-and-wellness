@@ -9,6 +9,10 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Health from "../pages/Health/Health";
 import Workout from "../pages/Workout/Workout";
 
+import Nutrition from "../pages/Nutrition/Nutrition";
+import Progress from "../pages/Progress/Progress";
+import AiChat from "../pages/AiChat/AiChat";
+
 function Page({ title }) {
     return (
         <div className="p-8">
@@ -56,10 +60,10 @@ function AppRouter() {
 
                     <Route element={<MainLayout />}>
 
-                        {/* Home */}
+                        {/* Home / Default */}
                         <Route
                             path="/"
-                            element={<Page title="Home" />}
+                            element={<Navigate to="/dashboard" replace />}
                         />
 
                         {/* Dashboard */}
@@ -83,19 +87,19 @@ function AppRouter() {
                         {/* Nutrition */}
                         <Route
                             path="/nutrition"
-                            element={<Page title="Nutrition" />}
+                            element={<Nutrition />}
                         />
 
                         {/* Progress */}
                         <Route
                             path="/progress"
-                            element={<Page title="Progress" />}
+                            element={<Progress />}
                         />
 
                         {/* AI Assistant */}
                         <Route
                             path="/ai-chat"
-                            element={<Page title="AI Assistant" />}
+                            element={<AiChat />}
                         />
 
                     </Route>

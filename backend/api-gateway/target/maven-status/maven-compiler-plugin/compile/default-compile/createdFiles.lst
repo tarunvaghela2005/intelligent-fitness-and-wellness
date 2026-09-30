@@ -1,0 +1,8 @@
+com\fitness\gateway\config\GatewayConfig.class
+com\fitness\gateway\filter\AuthenticationFilter.class
+com\fitness\gateway\filter\JwtAuthenticationFilter.class
+com\fitness\gateway\filter\JwtAuthenticationFilter$Config.class
+com\fitness\gateway\filter\RouteValidator.class
+com\fitness\gateway\filter\AuthenticationFilter$Config.class
+com\fitness\gateway\ApiGatewayApplication.class
+com\fitness\gateway\config\CorsConfig.class

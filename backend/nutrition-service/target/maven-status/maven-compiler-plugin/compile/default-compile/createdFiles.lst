@@ -1,0 +1,14 @@
+com\fitness\nutrition\model\WaterIntake$WaterIntakeBuilder.class
+com\fitness\nutrition\config\NutritionDataInitializer.class
+com\fitness\nutrition\repository\FoodRepository.class
+com\fitness\nutrition\model\Food$FoodBuilder.class
+com\fitness\nutrition\model\Food.class
+com\fitness\nutrition\NutritionServiceApplication.class
+com\fitness\nutrition\model\Meal$MealBuilder.class
+com\fitness\nutrition\model\Meal.class
+com\fitness\nutrition\controller\FoodController.class
+com\fitness\nutrition\controller\MealController.class
+com\fitness\nutrition\model\WaterIntake.class
+com\fitness\nutrition\repository\MealRepository.class
+com\fitness\nutrition\repository\WaterIntakeRepository.class
+com\fitness\nutrition\controller\WaterController.class

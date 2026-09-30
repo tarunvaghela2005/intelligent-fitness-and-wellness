@@ -1,11 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { isAuthenticated } from "../../services/authService";
 
 function ProtectedRoute() {
-    // Mock authentication check
-    const isAuthenticated =
-        localStorage.getItem("isAuthenticated") === "true";
-
-    if (!isAuthenticated) {
+    if (!isAuthenticated()) {
         return <Navigate to="/login" replace />;
     }
 

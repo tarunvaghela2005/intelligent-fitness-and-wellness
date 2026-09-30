@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public com.fitness.user.model.User getEntityByEmail(String userEmail) {
+    public User getEntityByEmail(String userEmail) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getEntityByEmail'");
     }

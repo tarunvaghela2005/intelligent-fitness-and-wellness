@@ -1,0 +1,5 @@
+com\fitness\notification\NotificationServiceApplication.class
+com\fitness\notification\repository\NotificationRepository.class
+com\fitness\notification\model\Notification$NotificationBuilder.class
+com\fitness\notification\model\Notification.class
+com\fitness\notification\controller\NotificationController.class

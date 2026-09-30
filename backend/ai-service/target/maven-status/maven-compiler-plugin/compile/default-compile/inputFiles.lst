@@ -1,0 +1,13 @@
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\dto\NutritionSummaryDto.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\client\FeignClient.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\controller\AiController.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\service\RecommendationEngineService.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\client\UserClient.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\AiServiceApplication.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\client\NutritionClient.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\EnableFeignClients.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\dto\UserDto.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\dto\WorkoutDto.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\controller\AiRecommendationController.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\client\FitnessClient.java
+C:\spring\intelligent-fitness-and-wellness\backend\ai-service\src\main\java\com\fitness\ai\service\GeminiAiService.java

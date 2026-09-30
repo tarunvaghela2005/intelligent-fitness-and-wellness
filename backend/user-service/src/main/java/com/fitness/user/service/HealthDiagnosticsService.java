@@ -1,8 +1,8 @@
+
 package com.fitness.user.service;
 
 import com.fitness.user.dto.HealthMetricsDto;
 import com.fitness.user.model.HealthMetrics;
-import com.fitness.user.model.User;
 import com.fitness.user.repository.HealthMetricsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,21 +13,51 @@ public class HealthDiagnosticsService {
 
     private final HealthMetricsRepository healthMetricsRepository;
 
-    public HealthMetrics calculateAndSaveMetrics(User user) {
-        double weight = user.getWeight() != null ? user.getWeight() : 70.0;
-        double height = user.getHeight() != null ? user.getHeight() : 170.0;
-        int age = user.getAge() != null ? user.getAge() : 25;
-        String gender = user.getGender() != null ? user.getGender().toUpperCase() : "MALE";
-        String activity = user.getActivityLevel() != null ? user.getActivityLevel().toUpperCase() : "MODERATELY_ACTIVE";
-        String goal = user.getFitnessGoal() != null ? user.getFitnessGoal().toUpperCase() : "MAINTENANCE";
+    public HealthMetrics calculateAndSaveMetrics(
+            com.fitness.user.entity.User user) {
 
-        // 1. BMI calculation: weight (kg) / (height (m))^2
+        double weight = user.getWeight() != null
+                ? (double) user.getWeight()
+                : 70.0;
+
+        double height = user.getWeight() != null
+                ? (double) user.getWeight()
+                : 170.0;
+
+        int age = (int) (user.getId() != null
+                ? user.getId()
+                : 25);
+
+        String gender = user.getGender() != null
+                ? ((String) user.getGender()).toUpperCase()
+                : "MALE";
+
+        String activity = user.getActivityLevel() != null
+                ? ((String) user.getActivityLevel()).toUpperCase()
+                : "MODERATELY_ACTIVE";
+
+        String goal = user.getFitnessGoal() != null
+                ? ((String) user.getFitnessGoal()).toUpperCase()
+                : "MAINTENANCE";
+
+        // 1. BMI calculation
         double heightInMeters = height / 100.0;
-        double bmi = Math.round((weight / (heightInMeters * heightInMeters)) * 10.0) / 10.0;
 
-        // 2. BMR calculation (Mifflin-St Jeor Equation)
-        double bmrBase = (10 * weight) + (6.25 * height) - (5 * age);
-        double bmr = "FEMALE".equalsIgnoreCase(gender) ? bmrBase - 161 : bmrBase + 5;
+        double bmi = Math.round(
+                (weight / (heightInMeters * heightInMeters)) * 10.0
+        ) / 10.0;
+
+        // 2. BMR calculation - Mifflin-St Jeor Equation
+        double bmrBase =
+                (10 * weight) +
+                (6.25 * height) -
+                (5 * age);
+
+        double bmr =
+                "FEMALE".equalsIgnoreCase(gender)
+                        ? bmrBase - 161
+                        : bmrBase + 5;
+
         bmr = Math.round(bmr);
 
         // 3. TDEE calculation
@@ -39,24 +69,48 @@ public class HealthDiagnosticsService {
             case "EXTRA_ACTIVE" -> 1.9;
             default -> 1.55;
         };
-        double tdee = Math.round(bmr * activityMultiplier);
 
-        // 4. Calorie Target
+        double tdee = Math.round(
+                bmr * activityMultiplier
+        );
+
+        // 4. Calorie target
         double calorieTarget = switch (goal) {
-            case "WEIGHT_LOSS" -> Math.max(1200, tdee - 500);
-            case "MUSCLE_GAIN" -> tdee + 350;
-            default -> tdee;
+            case "WEIGHT_LOSS" ->
+                    Math.max(1200, tdee - 500);
+
+            case "MUSCLE_GAIN" ->
+                    tdee + 350;
+
+            default ->
+                    tdee;
         };
+
         calorieTarget = Math.round(calorieTarget);
 
-        // 5. Macro Targets
-        double proteinTarget = Math.round(weight * 2.0); // 2.0g per kg
-        double fatTarget = Math.round((calorieTarget * 0.25) / 9.0); // 25% of calories
-        double remainingCalories = calorieTarget - ((proteinTarget * 4) + (fatTarget * 9));
-        double carbTarget = Math.round(Math.max(50, remainingCalories / 4.0));
+        // 5. Macro targets
+        double proteinTarget =
+                Math.round(weight * 2.0);
 
-        HealthMetrics metrics = healthMetricsRepository.findByUserId(user.getId())
-                .orElseGet(() -> HealthMetrics.builder().userId(user.getId()).build());
+        double fatTarget =
+                Math.round((calorieTarget * 0.25) / 9.0);
+
+        double remainingCalories =
+                calorieTarget -
+                ((proteinTarget * 4) + (fatTarget * 9));
+
+        double carbTarget =
+                Math.round(
+                        Math.max(50, remainingCalories / 4.0)
+                );
+
+        HealthMetrics metrics =
+                healthMetricsRepository.findByUserId(user.getId())
+                        .orElseGet(() ->
+                                HealthMetrics.builder()
+                                        .userId(user.getId())
+                                        .build()
+                        );
 
         metrics.setBmi(bmi);
         metrics.setBmr(bmr);
@@ -69,7 +123,9 @@ public class HealthDiagnosticsService {
         return healthMetricsRepository.save(metrics);
     }
 
-    public HealthMetricsDto convertToDto(HealthMetrics metrics) {
+    public HealthMetricsDto convertToDto(
+            HealthMetrics metrics) {
+
         return HealthMetricsDto.builder()
                 .userId(metrics.getUserId())
                 .bmi(metrics.getBmi())
@@ -82,3 +138,4 @@ public class HealthDiagnosticsService {
                 .build();
     }
 }
+

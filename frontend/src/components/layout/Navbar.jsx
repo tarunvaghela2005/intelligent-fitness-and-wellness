@@ -1,7 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
+import { isAuthenticated, getCurrentUser, logout } from "../../services/authService";
 
 function Navbar({ onMenuClick }) {
+    const navigate = useNavigate();
+    const isAuth = isAuthenticated();
+    const user = getCurrentUser();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
+
     return (
         <header className="sticky top-0 z-40 border-b border-[var(--border-color-default)] bg-[var(--color-surface)] transition-colors duration-200">
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -34,7 +44,7 @@ function Navbar({ onMenuClick }) {
 
                     {/* Brand */}
                     <Link
-                        to="/"
+                        to="/dashboard"
                         className="flex items-center gap-3"
                     >
                         <div className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--color-brand)] text-lg font-bold text-white">
@@ -57,23 +67,6 @@ function Navbar({ onMenuClick }) {
                 <nav className="hidden items-center gap-1 md:flex">
 
                     <Link
-                        to="/"
-                        className="
-                            rounded-[var(--radius-md)]
-                            px-3
-                            py-2
-                            text-sm
-                            font-medium
-                            text-[var(--color-text-secondary)]
-                            transition-colors
-                            hover:bg-[var(--color-slate-100)]
-                            hover:text-[var(--color-text-primary)]
-                        "
-                    >
-                        Home
-                    </Link>
-
-                    <Link
                         to="/dashboard"
                         className="
                             rounded-[var(--radius-md)]
@@ -88,6 +81,23 @@ function Navbar({ onMenuClick }) {
                         "
                     >
                         Dashboard
+                    </Link>
+
+                    <Link
+                        to="/health"
+                        className="
+                            rounded-[var(--radius-md)]
+                            px-3
+                            py-2
+                            text-sm
+                            font-medium
+                            text-[var(--color-text-secondary)]
+                            transition-colors
+                            hover:bg-[var(--color-slate-100)]
+                            hover:text-[var(--color-text-primary)]
+                        "
+                    >
+                        Health
                     </Link>
 
                     <Link
@@ -107,68 +117,79 @@ function Navbar({ onMenuClick }) {
                         Workout
                     </Link>
 
-                    <Link
-                        to="/nutrition"
-                        className="
-                            rounded-[var(--radius-md)]
-                            px-3
-                            py-2
-                            text-sm
-                            font-medium
-                            text-[var(--color-text-secondary)]
-                            transition-colors
-                            hover:bg-[var(--color-slate-100)]
-                            hover:text-[var(--color-text-primary)]
-                        "
-                    >
-                        Nutrition
-                    </Link>
-
                 </nav>
 
                 {/* Right Actions */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
 
                     {/* Theme Toggle */}
                     <ThemeToggle />
 
-                    {/* Login */}
-                    <Link
-                        to="/login"
-                        className="
-                            hidden
-                            rounded-[var(--radius-md)]
-                            px-3
-                            py-2
-                            text-sm
-                            font-medium
-                            text-[var(--color-text-secondary)]
-                            transition-colors
-                            hover:bg-[var(--color-slate-100)]
-                            hover:text-[var(--color-text-primary)]
-                            md:block
-                        "
-                    >
-                        Login
-                    </Link>
+                    {isAuth ? (
+                        <div className="flex items-center gap-3">
+                            <span className="hidden text-sm font-medium text-[var(--color-text-primary)] sm:inline-block">
+                                👤 {user?.fullName || user?.firstName || "User"}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={handleLogout}
+                                className="
+                                    rounded-[var(--radius-md)]
+                                    border
+                                    border-[var(--border-color-default)]
+                                    px-3
+                                    py-1.5
+                                    text-xs
+                                    font-semibold
+                                    text-[var(--color-text-secondary)]
+                                    transition-colors
+                                    hover:bg-red-50
+                                    hover:border-red-200
+                                    hover:text-red-600
+                                "
+                            >
+                                Sign Out
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            <Link
+                                to="/login"
+                                className="
+                                    hidden
+                                    rounded-[var(--radius-md)]
+                                    px-3
+                                    py-2
+                                    text-sm
+                                    font-medium
+                                    text-[var(--color-text-secondary)]
+                                    transition-colors
+                                    hover:bg-[var(--color-slate-100)]
+                                    hover:text-[var(--color-text-primary)]
+                                    md:block
+                                "
+                            >
+                                Login
+                            </Link>
 
-                    {/* Get Started */}
-                    <Link
-                        to="/register"
-                        className="
-                            rounded-[var(--radius-md)]
-                            bg-[var(--color-brand)]
-                            px-4
-                            py-2
-                            text-sm
-                            font-medium
-                            text-white
-                            transition-colors
-                            hover:bg-[var(--color-brand-hover)]
-                        "
-                    >
-                        Get Started
-                    </Link>
+                            <Link
+                                to="/register"
+                                className="
+                                    rounded-[var(--radius-md)]
+                                    bg-[var(--color-brand)]
+                                    px-4
+                                    py-2
+                                    text-sm
+                                    font-medium
+                                    text-white
+                                    transition-colors
+                                    hover:bg-[var(--color-brand-hover)]
+                                "
+                            >
+                                Get Started
+                            </Link>
+                        </>
+                    )}
 
                 </div>
 

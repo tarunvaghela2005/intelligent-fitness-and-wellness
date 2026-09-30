@@ -1,101 +1,99 @@
+import api from "./api";
+
 // ==========================================
-// Authentication Service
+// Authentication Service (Connected to Backend)
 // ==========================================
-// Currently uses localStorage for mock authentication.
-// Later this service can be connected to Spring Boot APIs
-// without changing the Login/Register UI components.
 
 // ------------------------------------------
 // Register User
 // ------------------------------------------
 export const register = async (userData) => {
     try {
-        // Mock registration
-        const mockUser = {
-            fullName: userData.fullName.trim(),
-            email: userData.email.trim(),
-            username: userData.username.trim(),
+        const rawFullName = userData.fullName ? userData.fullName.trim() : "";
+        const nameParts = rawFullName.split(" ");
+        const firstName = userData.firstName || nameParts[0] || "User";
+        const lastName = userData.lastName || nameParts.slice(1).join(" ") || "Member";
+
+        const payload = {
+            email: userData.email.trim().toLowerCase(),
             password: userData.password,
+            firstName: firstName,
+            lastName: lastName,
+            age: userData.age ? Number(userData.age) : 25,
+            gender: userData.gender || "MALE",
+            heightCm: userData.heightCm ? Number(userData.heightCm) : 175.0,
+            weightKg: userData.weightKg ? Number(userData.weightKg) : 70.0,
+            targetWeightKg: userData.targetWeightKg ? Number(userData.targetWeightKg) : 68.0,
+            activityLevel: userData.activityLevel || "MODERATELY_ACTIVE",
+            fitnessGoal: userData.fitnessGoal || "GENERAL_FITNESS",
+            dietaryPreference: userData.dietaryPreference || "BALANCED",
         };
 
-        localStorage.setItem(
-            "mockUser",
-            JSON.stringify(mockUser)
-        );
+        const response = await api.post("/api/v1/auth/register", payload);
+        const data = response.data?.data || response.data;
+
+        if (data?.token) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data));
+            localStorage.setItem("isAuthenticated", "true");
+        }
 
         return {
             success: true,
-            message: "Account created successfully.",
-            user: {
-                fullName: mockUser.fullName,
-                email: mockUser.email,
-                username: mockUser.username,
-            },
+            message: response.data?.message || "Account created successfully.",
+            user: data,
         };
     } catch (error) {
-        console.error("Registration service error:", error);
+        console.error("Registration API error:", error);
+        const errorMsg =
+            error.response?.data?.message ||
+            error.response?.data?.error ||
+            "Unable to create account. Please ensure all fields are valid.";
 
         return {
             success: false,
-            message: "Unable to create account.",
+            message: errorMsg,
         };
     }
 };
-
 
 // ------------------------------------------
 // Login User
 // ------------------------------------------
 export const login = async (email, password) => {
     try {
-        const storedUser = localStorage.getItem("mockUser");
+        const payload = {
+            email: email.trim().toLowerCase(),
+            password: password,
+        };
 
-        if (!storedUser) {
-            return {
-                success: false,
-                message: "No registered account found.",
-            };
+        const response = await api.post("/api/v1/auth/login", payload);
+        const data = response.data?.data || response.data;
+
+        if (data?.token) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data));
+            localStorage.setItem("isAuthenticated", "true");
         }
-
-        const mockUser = JSON.parse(storedUser);
-
-        const isValidUser =
-            email.trim().toLowerCase() ===
-            mockUser.email.trim().toLowerCase() &&
-            password === mockUser.password;
-
-        if (!isValidUser) {
-            return {
-                success: false,
-                message: "Invalid email or password.",
-            };
-        }
-
-        // Save authentication state
-        localStorage.setItem(
-            "isAuthenticated",
-            "true"
-        );
 
         return {
             success: true,
-            message: "Login successful.",
-            user: {
-                fullName: mockUser.fullName,
-                email: mockUser.email,
-                username: mockUser.username,
-            },
+            message: response.data?.message || "Login successful.",
+            user: data,
         };
     } catch (error) {
-        console.error("Login service error:", error);
+        console.error("Login API error:", error);
+        const errorMsg =
+            error.response?.data?.message ||
+            error.response?.data?.error ||
+            "Invalid email or password. Please check your credentials.";
 
         return {
             success: false,
-            message: "Unable to login.",
+            message: errorMsg,
         };
     }
 };
-
 
 // ------------------------------------------
 // Forgot Password
@@ -103,16 +101,10 @@ export const login = async (email, password) => {
 export const forgotPassword = async (email) => {
     try {
         const trimmedEmail = email.trim().toLowerCase();
+        console.log("Password reset requested for:", trimmedEmail);
 
-        console.log(
-            "Password reset requested for:",
-            trimmedEmail
-        );
-
-        // Mock password reset request
-        await new Promise((resolve) => {
-            setTimeout(resolve, 1000);
-        });
+        // Fallback simulation / endpoint placeholder
+        await new Promise((resolve) => setTimeout(resolve, 800));
 
         return {
             success: true,
@@ -120,11 +112,7 @@ export const forgotPassword = async (email) => {
                 "If an account exists with this email, you will receive a password reset link.",
         };
     } catch (error) {
-        console.error(
-            "Forgot password service error:",
-            error
-        );
-
+        console.error("Forgot password service error:", error);
         return {
             success: false,
             message: "Unable to process password reset request.",
@@ -132,11 +120,13 @@ export const forgotPassword = async (email) => {
     }
 };
 
-
 // ------------------------------------------
 // Logout User
 // ------------------------------------------
 export const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("mockUser");
     localStorage.removeItem("isAuthenticated");
 
     return {
@@ -145,41 +135,38 @@ export const logout = () => {
     };
 };
 
-
 // ------------------------------------------
 // Check Authentication
 // ------------------------------------------
 export const isAuthenticated = () => {
-    return (
+    return Boolean(
+        localStorage.getItem("token") ||
         localStorage.getItem("isAuthenticated") === "true"
     );
 };
-
 
 // ------------------------------------------
 // Get Current User
 // ------------------------------------------
 export const getCurrentUser = () => {
     try {
-        const storedUser = localStorage.getItem("mockUser");
-
+        const storedUser = localStorage.getItem("user") || localStorage.getItem("mockUser");
         if (!storedUser) {
             return null;
         }
 
-        const mockUser = JSON.parse(storedUser);
-
+        const user = JSON.parse(storedUser);
         return {
-            fullName: mockUser.fullName,
-            email: mockUser.email,
-            username: mockUser.username,
+            fullName: user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : (user.fullName || "User"),
+            firstName: user.firstName || (user.fullName ? user.fullName.split(" ")[0] : "User"),
+            lastName: user.lastName || "",
+            email: user.email,
+            username: user.username || user.email?.split("@")[0],
+            userId: user.userId || user.id,
+            role: user.role,
         };
     } catch (error) {
-        console.error(
-            "Get current user service error:",
-            error
-        );
-
+        console.error("Get current user error:", error);
         return null;
     }
 };

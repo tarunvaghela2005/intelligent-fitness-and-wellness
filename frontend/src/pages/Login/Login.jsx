@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { login } from "../../services/authService";
 
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
@@ -86,51 +87,20 @@ function Login() {
         setSuccess("");
 
         try {
-            // Simulate API request
-            await new Promise((resolve) => {
-                setTimeout(resolve, 1500);
-            });
+            const result = await login(formData.email, formData.password);
 
-            // Get registered mock user
-            const storedUser = localStorage.getItem("mockUser");
-
-            if (!storedUser) {
-                throw new Error("No registered account found.");
+            if (result.success) {
+                setSuccess("Login successful! Redirecting to dashboard...");
+                setTimeout(() => {
+                    navigate("/dashboard");
+                }, 800);
+            } else {
+                setError(result.message || "Invalid email or password. Please check your credentials.");
             }
-
-            const mockUser = JSON.parse(storedUser);
-
-            // Check email and password
-            const isValidUser =
-                formData.email.trim().toLowerCase() ===
-                mockUser.email.trim().toLowerCase() &&
-                formData.password === mockUser.password;
-
-            if (!isValidUser) {
-                throw new Error("Invalid email or password.");
-            }
-
-            // Save mock authentication state
-            localStorage.setItem("isAuthenticated", "true");
-
-            // Mock success
-            setSuccess("Login successful! Welcome back.");
-
-            console.log("Mock login successful:", {
-                email: mockUser.email,
-                username: mockUser.username,
-            });
-
-            // Redirect to dashboard
-            setTimeout(() => {
-                navigate("/dashboard");
-            }, 1000);
-
         } catch (loginError) {
-            console.error("Mock login failed:", loginError);
-
+            console.error("Login failed:", loginError);
             setError(
-                "Invalid email or password. Please check your credentials and try again."
+                "Unable to connect to the server. Please check your backend and try again."
             );
         } finally {
             setLoading(false);
