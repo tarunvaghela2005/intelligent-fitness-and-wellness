@@ -1,6 +1,62 @@
 import api from "./api";
 
-// Core rule-based AI recommendations
+// ==========================================
+// GEMINI AI SERVICE (Real AI Integration)
+// ==========================================
+
+export const getWorkoutRecommendation = async (request = {}) => {
+    try {
+        const res = await api.post("/api/ai/workout", {
+            goal: request.goal || "Muscle Gain & Strength",
+            experienceLevel: request.experienceLevel || "Intermediate",
+        });
+        return res.data?.recommendation || "Unable to generate workout plan. Please try again.";
+    } catch (e) {
+        console.error("Error fetching workout recommendation:", e);
+        return "Failed to connect to AI Coach. Please check your connection and try again.";
+    }
+};
+
+export const getMealRecommendation = async (request = {}) => {
+    try {
+        const res = await api.post("/api/ai/meal", {
+            targetCalories: request.targetCalories || 2200,
+            dietaryPreference: request.dietaryPreference || "High Protein",
+        });
+        return res.data?.recommendation || "Unable to generate meal plan. Please try again.";
+    } catch (e) {
+        console.error("Error fetching meal recommendation:", e);
+        return "Failed to connect to AI Coach. Please check your connection and try again.";
+    }
+};
+
+export const getProgressAnalysis = async (request = {}) => {
+    try {
+        const res = await api.post("/api/ai/progress", {
+            startWeight: request.startWeight || 75.0,
+            currentWeight: request.currentWeight || 72.5,
+        });
+        return res.data?.recommendation || "Unable to analyze progress. Please try again.";
+    } catch (e) {
+        console.error("Error fetching progress analysis:", e);
+        return "Failed to connect to AI Coach. Please check your connection and try again.";
+    }
+};
+
+export const getWellnessGuidance = async () => {
+    try {
+        const res = await api.post("/api/ai/wellness", {});
+        return res.data?.recommendation || "Unable to fetch wellness guidance. Please try again.";
+    } catch (e) {
+        console.error("Error fetching wellness guidance:", e);
+        return "Failed to connect to AI Coach. Please check your connection and try again.";
+    }
+};
+
+// ==========================================
+// RULE-BASED RECOMMENDATIONS (Backward Compat)
+// ==========================================
+
 export const getAiRecommendations = async (userId) => {
     try {
         const id = userId || getCurrentUserId();
@@ -34,56 +90,10 @@ export const getCalorieAnalysis = async (userId) => {
     }
 };
 
-// UI helper methods used by AiChat and Progress
-export const getWorkoutRecommendation = async (goal, level) => {
-    const data = await getAiRecommendations();
-    const workoutRec = data?.recommendations?.find((r) => r.type === "WORKOUT") || {
-        title: "Balanced Split Routine",
-        description: "Focus on 3 days of progressive compound lifts (Squats, Bench Press) and 2 days of 20-30 min cardio.",
-    };
-    return {
-        title: workoutRec.title,
-        plan: workoutRec.description,
-        recommendations: data?.recommendations || [],
-    };
-};
-
-export const getMealRecommendation = async (calorieTarget, preference) => {
-    const data = await getAiRecommendations();
-    const nutRec = data?.recommendations?.find((r) => r.type === "NUTRITION") || {
-        title: "Nutrient-Dense Meal Balance",
-        description: "Focus on high-protein sources (chicken breast, eggs, dal, paneer) and complex carbs (rice, roti, oats).",
-    };
-    return {
-        title: nutRec.title,
-        dietPlan: nutRec.description,
-        calorieTarget: data?.calorieAnalysis?.targetDailyCalories || 2000,
-    };
-};
-
-export const getProgressAnalysis = async () => {
-    const data = await getAiRecommendations();
-    return {
-        bmi: data?.bmiAnalysis?.bmi || 22.0,
-        category: data?.bmiAnalysis?.category || "Normal",
-        statusColor: data?.bmiAnalysis?.statusColor || "#10b981",
-        tdee: data?.calorieAnalysis?.tdee || 2200,
-        recommendations: data?.recommendations || [],
-    };
-};
-
-export const getWellnessGuidance = async () => {
-    const data = await getAiRecommendations();
-    return {
-        guidance: "Stay consistent with daily hydration (2.5L minimum), aim for 7-8 hours of restful sleep, and take 5-minute mobility breaks during sedentary hours.",
-        disclaimer: data?.disclaimer || "Rule-based fitness guidance, not medical diagnosis.",
-    };
-};
-
 function getCurrentUserId() {
     try {
         const user = JSON.parse(localStorage.getItem("user") || "{}");
-        return user.id || 1;
+        return user.userId || user.id || 1;
     } catch (e) {
         return 1;
     }
