@@ -10,8 +10,11 @@ import {
     Area,
     AreaChart,
     Legend,
+    BarChart,
+    Bar,
 } from "recharts";
-import { getProgressRecords, logProgressRecord } from "../../services/fitnessService";
+import { getProgressRecords, logProgressRecord, getWorkouts } from "../../services/fitnessService";
+import { getDailyNutritionSummary, getMeals } from "../../services/nutritionService";
 import { getProgressAnalysis } from "../../services/aiService";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
@@ -80,6 +83,10 @@ function Progress() {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
 
+    const [dateRange, setDateRange] = useState("30"); // 7, 30, 90, all
+    const [workoutData, setWorkoutData] = useState([]);
+    const [calorieData, setCalorieData] = useState([]);
+
     // ==========================================
     // DATA LOADING
     // ==========================================
@@ -105,10 +112,10 @@ function Progress() {
             const data = await getProgressRecords();
             const sorted = Array.isArray(data)
                 ? [...data].sort(
-                      (a, b) =>
-                          new Date(a.date || a.createdAt || 0) -
-                          new Date(b.date || b.createdAt || 0)
-                  )
+                    (a, b) =>
+                        new Date(a.date || a.createdAt || 0) -
+                        new Date(b.date || b.createdAt || 0)
+                )
                 : [];
             setRecords(sorted);
             if (sorted.length >= 2) {
@@ -254,14 +261,14 @@ function Progress() {
                             weightChange == null
                                 ? "text-gray-500"
                                 : Number(weightChange) <= 0
-                                ? "text-green-600"
-                                : "text-red-500",
+                                    ? "text-green-600"
+                                    : "text-red-500",
                         bg:
                             weightChange == null
                                 ? "bg-gray-50"
                                 : Number(weightChange) <= 0
-                                ? "bg-green-50"
-                                : "bg-red-50",
+                                    ? "bg-green-50"
+                                    : "bg-red-50",
                     },
                 ].map((stat) => (
                     <div
@@ -626,11 +633,10 @@ function Progress() {
                                                             Change
                                                         </p>
                                                         <p
-                                                            className={`text-sm font-bold ${
-                                                                Number(change) <= 0
-                                                                    ? "text-green-600"
-                                                                    : "text-red-500"
-                                                            }`}
+                                                            className={`text-sm font-bold ${Number(change) <= 0
+                                                                ? "text-green-600"
+                                                                : "text-red-500"
+                                                                }`}
                                                         >
                                                             {Number(change) > 0 ? "+" : ""}
                                                             {change} kg
