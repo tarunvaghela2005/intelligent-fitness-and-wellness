@@ -12,6 +12,7 @@ import Workout from "../pages/Workout/Workout";
 import Nutrition from "../pages/Nutrition/Nutrition";
 import Progress from "../pages/Progress/Progress";
 import AiChat from "../pages/AiChat/AiChat";
+import Goals from "../pages/Goals/Goals";
 
 function Page({ title }) {
     return (
@@ -100,6 +101,12 @@ function AppRouter() {
                         <Route
                             path="/ai-chat"
                             element={<AiChat />}
+                        />
+
+                        {/* Fitness Goals */}
+                        <Route
+                            path="/goals"
+                            element={<Goals />}
                         />
 
                     </Route>
