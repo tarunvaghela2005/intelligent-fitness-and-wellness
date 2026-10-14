@@ -1,32 +1,26 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { forgotPassword } from "../../services/authService";
 
 function ForgotPassword() {
-    // Email
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState("");
-
-    // Loading State
     const [isLoading, setIsLoading] = useState(false);
-
-    // Success State
     const [isSuccess, setIsSuccess] = useState(false);
-
-    // General Error
     const [error, setError] = useState("");
 
-    // Email Validation
+    // ------------------------------------------
+    // Validation
+    // ------------------------------------------
     const validateEmail = () => {
-        const trimmedEmail = email.trim();
+        const trimmed = email.trim();
 
-        if (!trimmedEmail) {
+        if (!trimmed) {
             setEmailError("Email is required.");
             return false;
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(trimmedEmail)) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
             setEmailError("Please enter a valid email address.");
             return false;
         }
@@ -35,76 +29,36 @@ function ForgotPassword() {
         return true;
     };
 
-    // Email Change
-    const handleEmailChange = (event) => {
-        const value = event.target.value;
-
-        setEmail(value);
-
-        if (emailError) {
-            setEmailError("");
-        }
-
-        if (error) {
-            setError("");
-        }
-
-        if (isSuccess) {
-            setIsSuccess(false);
-        }
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        if (emailError) setEmailError("");
+        if (error) setError("");
+        if (isSuccess) setIsSuccess(false);
     };
 
-    // Send Reset Link
-    const handleResetPassword = async () => {
-        const isEmailValid = validateEmail();
+    // ------------------------------------------
+    // Submit
+    // ------------------------------------------
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
 
-        if (!isEmailValid) {
-            return;
-        }
+        if (!validateEmail()) return;
 
         setIsLoading(true);
         setIsSuccess(false);
         setError("");
 
         try {
-            // Simulate API request
-            await new Promise((resolve) => {
-                setTimeout(resolve, 1500);
-            });
+            const result = await forgotPassword(email);
 
-            // Get registered mock user
-            const storedUser = localStorage.getItem("mockUser");
-
-            if (storedUser) {
-                const mockUser = JSON.parse(storedUser);
-
-                console.log("Forgot password request:", {
-                    email: email.trim(),
-                });
-
-                console.log(
-                    "Registered email:",
-                    mockUser.email
-                );
+            if (result.success) {
+                setIsSuccess(true);
             } else {
-                console.log(
-                    "No mock account found for this browser."
-                );
+                setError(result.message || "Unable to process your request. Please try again.");
             }
-
-            // Show success message
-            // We intentionally don't reveal whether the email exists.
-            setIsSuccess(true);
-
-        } catch (resetError) {
-            console.error(
-                "Forgot password failed:",
-                resetError
-            );
-
-            setError(
-                "Unable to process your request. Please try again."
-            );
+        } catch (err) {
+            console.error("Forgot password error:", err);
+            setError("Unable to connect to the server. Please check your connection and try again.");
         } finally {
             setIsLoading(false);
         }
@@ -112,18 +66,13 @@ function ForgotPassword() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex items-center justify-center px-4 py-10">
-
             <div className="w-full max-w-md">
 
                 {/* Logo & Heading */}
                 <div className="text-center mb-8">
-
-                    {/* Logo */}
                     <div className="flex justify-center mb-5">
                         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-blue-900/40">
-                            <span className="text-3xl font-extrabold text-white">
-                                F
-                            </span>
+                            <span className="text-3xl font-extrabold text-white">F</span>
                         </div>
                     </div>
 
@@ -132,124 +81,111 @@ function ForgotPassword() {
                     </h1>
 
                     <p className="mt-3 text-sm sm:text-base text-blue-100/80">
-                        Enter your email address and we'll send you a
-                        password reset link.
+                        Enter your email and we'll send you a password reset link.
                     </p>
-
                 </div>
 
-                {/* Forgot Password Card */}
+                {/* Card */}
                 <div className="bg-white rounded-3xl shadow-2xl shadow-black/30 p-6 sm:p-8">
 
-                    {/* Success Message */}
+                    {/* Success State */}
                     {isSuccess && (
-                        <div className="mb-5 rounded-xl border border-green-200 bg-green-50 px-4 py-4 text-center">
-
-                            <div className="text-3xl mb-2">
-                                ✅
-                            </div>
-
+                        <div className="mb-6 rounded-xl border border-green-200 bg-green-50 px-4 py-5 text-center">
+                            <div className="text-4xl mb-3">✅</div>
                             <h2 className="text-lg font-bold text-green-700">
                                 Reset Link Sent!
                             </h2>
-
-                            <p className="mt-1 text-sm text-green-600">
-                                If an account exists with this email,
-                                you will receive a password reset link.
+                            <p className="mt-2 text-sm text-green-600">
+                                If an account exists with this email, you will receive a
+                                password reset link shortly. Check your inbox and spam folder.
                             </p>
-
-                        </div>
-                    )}
-
-                    {/* Error Message */}
-                    {error && (
-                        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
-                            <p className="text-sm font-medium text-red-600">
-                                {error}
-                            </p>
-                        </div>
-                    )}
-
-                    <div className="space-y-5">
-
-                        {/* Email */}
-                        <div>
-
-                            <label
-                                htmlFor="email"
-                                className="block mb-2 text-sm font-semibold text-slate-800"
-                            >
-                                Email*
-                            </label>
-
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                value={email}
-                                onChange={handleEmailChange}
-                                onBlur={validateEmail}
-                                placeholder="Enter your email"
-                                disabled={isLoading}
-                                autoComplete="email"
-                                className={`w-full px-4 py-3 rounded-xl border bg-white text-slate-900 placeholder-slate-400 outline-none transition ${emailError
-                                        ? "border-red-500 focus:ring-4 focus:ring-red-100"
-                                        : "border-slate-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                                    } ${isLoading
-                                        ? "bg-slate-100 cursor-not-allowed"
-                                        : ""
-                                    }`}
-                            />
-
-                            {emailError && (
-                                <p className="mt-2 text-sm font-medium text-red-500">
-                                    {emailError}
-                                </p>
-                            )}
-
-                        </div>
-
-                        {/* Reset Button */}
-                        <button
-                            type="button"
-                            onClick={handleResetPassword}
-                            disabled={isLoading}
-                            className={`w-full py-3.5 rounded-xl text-white font-semibold shadow-lg transition duration-200 ${isLoading
-                                    ? "bg-slate-400 cursor-not-allowed"
-                                    : "bg-gradient-to-r from-blue-600 to-indigo-600 shadow-blue-500/30 hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl active:scale-[0.98]"
-                                }`}
-                        >
-                            {isLoading
-                                ? "Sending Reset Link..."
-                                : "Send Reset Link"}
-                        </button>
-
-                    </div>
-
-                    {/* Back to Login */}
-                    <div className="mt-6 pt-6 border-t border-slate-200">
-
-                        <p className="text-center text-sm text-slate-600">
-                            Remember your password?{" "}
-
                             <Link
                                 to="/login"
-                                className="font-semibold text-blue-600 hover:text-indigo-600 hover:underline"
+                                className="mt-4 inline-block text-sm font-semibold text-blue-600 hover:underline"
                             >
-                                Sign In
+                                ← Back to Sign In
                             </Link>
+                        </div>
+                    )}
 
-                        </p>
+                    {/* Error */}
+                    {error && (
+                        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3" role="alert">
+                            <p className="text-sm font-medium text-red-600">{error}</p>
+                        </div>
+                    )}
 
-                    </div>
+                    {/* Form — hide after success */}
+                    {!isSuccess && (
+                        <form onSubmit={handleResetPassword} noValidate className="space-y-5">
 
+                            {/* Email */}
+                            <div>
+                                <label
+                                    htmlFor="fp-email"
+                                    className="block mb-2 text-sm font-semibold text-slate-800"
+                                >
+                                    Email Address <span className="text-red-500">*</span>
+                                </label>
+
+                                <input
+                                    id="fp-email"
+                                    name="email"
+                                    type="email"
+                                    value={email}
+                                    onChange={handleEmailChange}
+                                    onBlur={validateEmail}
+                                    placeholder="Enter your registered email"
+                                    disabled={isLoading}
+                                    autoComplete="email"
+                                    aria-describedby={emailError ? "fp-email-error" : undefined}
+                                    aria-invalid={!!emailError}
+                                    className={`w-full px-4 py-3 rounded-xl border bg-white text-slate-900 placeholder-slate-400 outline-none transition ${emailError
+                                            ? "border-red-500 focus:ring-4 focus:ring-red-100"
+                                            : "border-slate-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                                        } ${isLoading ? "bg-slate-100 cursor-not-allowed" : ""}`}
+                                />
+
+                                {emailError && (
+                                    <p id="fp-email-error" className="mt-2 text-sm font-medium text-red-500" role="alert">
+                                        {emailError}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Submit Button */}
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className={`w-full py-3.5 rounded-xl text-white font-semibold shadow-lg transition duration-200 ${isLoading
+                                        ? "bg-slate-400 cursor-not-allowed"
+                                        : "bg-gradient-to-r from-blue-600 to-indigo-600 shadow-blue-500/30 hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl active:scale-[0.98]"
+                                    }`}
+                            >
+                                {isLoading ? "Sending Reset Link..." : "Send Reset Link"}
+                            </button>
+                        </form>
+                    )}
+
+                    {/* Back to Login */}
+                    {!isSuccess && (
+                        <div className="mt-6 pt-6 border-t border-slate-200">
+                            <p className="text-center text-sm text-slate-600">
+                                Remember your password?{" "}
+                                <Link
+                                    to="/login"
+                                    className="font-semibold text-blue-600 hover:text-indigo-600 hover:underline"
+                                >
+                                    Sign In
+                                </Link>
+                            </p>
+                        </div>
+                    )}
                 </div>
 
-                {/* Footer */}
                 <p className="text-center text-xs text-blue-100/50 mt-6">
-                    © 2026 Intelligent Fitness & Wellness
+                    © 2026 Intelligent Fitness &amp; Wellness
                 </p>
-
             </div>
         </div>
     );

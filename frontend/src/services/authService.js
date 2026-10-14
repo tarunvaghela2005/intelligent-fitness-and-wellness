@@ -96,26 +96,39 @@ export const login = async (email, password) => {
 };
 
 // ------------------------------------------
-// Forgot Password
+// Forgot Password  (real API call)
 // ------------------------------------------
 export const forgotPassword = async (email) => {
     try {
         const trimmedEmail = email.trim().toLowerCase();
-        console.log("Password reset requested for:", trimmedEmail);
 
-        // Fallback simulation / endpoint placeholder
-        await new Promise((resolve) => setTimeout(resolve, 800));
+        await api.post("/api/v1/auth/forgot-password", { email: trimmedEmail });
 
         return {
             success: true,
             message:
-                "If an account exists with this email, you will receive a password reset link.",
+                "If an account exists with this email, you will receive a password reset link shortly.",
         };
     } catch (error) {
-        console.error("Forgot password service error:", error);
+        console.error("Forgot password API error:", error);
+
+        // 404 → treat same as success to avoid email enumeration
+        if (error.response?.status === 404) {
+            return {
+                success: true,
+                message:
+                    "If an account exists with this email, you will receive a password reset link shortly.",
+            };
+        }
+
+        const errorMsg =
+            error.response?.data?.message ||
+            error.response?.data?.error ||
+            "Unable to process your password reset request. Please try again.";
+
         return {
             success: false,
-            message: "Unable to process password reset request.",
+            message: errorMsg,
         };
     }
 };
