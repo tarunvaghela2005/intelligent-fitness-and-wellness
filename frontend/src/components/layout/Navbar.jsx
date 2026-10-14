@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
+import LanguageSwitcher from "../ui/LanguageSwitcher";
 import { isAuthenticated, getCurrentUser, logout } from "../../services/authService";
 
 function Navbar({ onMenuClick }) {
@@ -121,6 +122,9 @@ function Navbar({ onMenuClick }) {
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-3">
+
+                    {/* Language Switcher */}
+                    <LanguageSwitcher />
 
                     {/* Theme Toggle */}
                     <ThemeToggle />
