@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import MainLayout from "../components/layout/MainLayout";
 import Login from "../pages/Login/Login";
@@ -13,6 +13,7 @@ import Nutrition from "../pages/Nutrition/Nutrition";
 import Progress from "../pages/Progress/Progress";
 import AiChat from "../pages/AiChat/AiChat";
 import Goals from "../pages/Goals/Goals";
+import Profile from "../pages/Profile/Profile";
 
 function Page({ title }) {
     return (
@@ -107,6 +108,12 @@ function AppRouter() {
                         <Route
                             path="/goals"
                             element={<Goals />}
+                        />
+
+                        {/* Profile & Settings */}
+                        <Route
+                            path="/profile"
+                            element={<Profile />}
                         />
 
                     </Route>

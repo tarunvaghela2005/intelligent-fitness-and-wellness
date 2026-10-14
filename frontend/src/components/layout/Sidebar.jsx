@@ -27,9 +27,19 @@ const navigationItems = [
         icon: "📈",
     },
     {
+        name: "Goals",
+        path: "/goals",
+        icon: "🎯",
+    },
+    {
         name: "AI Assistant",
         path: "/ai-chat",
         icon: "🤖",
+    },
+    {
+        name: "Profile",
+        path: "/profile",
+        icon: "👤",
     },
 ];
 
